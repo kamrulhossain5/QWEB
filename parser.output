@@ -1,0 +1,4222 @@
+   0  $accept : %entry% $end
+
+   1  program : func_decl_list EOF
+
+   2  func_decl_list :
+   3                 | func_decl_list func_decl
+
+   4  obj_list : typ ID
+   5           | obj_list COMMA ID
+
+   6  stmt : expr END
+   7       | REPEAT expr COLON loop_stmt_list ENDREPEAT
+   8       | FOR ID IN expr COLON loop_stmt_list ENDFOR
+   9       | IF expr COLON stmt_list ENDIF otherwiseif_list
+  10       | IF expr COLON stmt_list ENDIF otherwiseif_list OTHERWISE COLON stmt_list ENDOTHERWISE
+  11       | DISPLAY expr END
+  12       | OBJECT obj_list END
+  13       | OUTPUT END
+  14       | OUTPUT expr END
+
+  15  stmt_list :
+  16            | stmt_list stmt
+
+  17  loop_stmt_list :
+  18                 | loop_stmt_list loop_stmt
+
+  19  loop_stmt : stmt
+  20            | PASS END
+  21            | CONTINUE END
+
+  22  otherwiseif_list :
+  23                   | otherwiseif_list otherwiseif_stmt
+
+  24  otherwiseif_stmt : OTHERWISEIF expr COLON stmt_list ENDOTHERWISEIF
+
+  25  expr : literal
+  26       | arith_op
+  27       | bool_op
+  28       | LBRACKET qweb_list RBRACKET
+  29       | list_op
+  30       | html_op
+  31       | obj_op
+  32       | typ ID
+  33       | ID ASSIGN expr
+  34       | LPAREN expr RPAREN
+  35       | LBRACE dict RBRACE
+  36       | ID LPAREN actuals_opt RPAREN
+
+  37  arith_op : MINUS expr
+  38           | expr PLUS expr
+  39           | expr MINUS expr
+  40           | expr TIMES expr
+  41           | expr DIVIDE expr
+
+  42  bool_op : NOT expr
+  43          | expr EQ expr
+  44          | expr NEQ expr
+  45          | expr LT expr
+  46          | expr LEQ expr
+  47          | expr GT expr
+  48          | expr GEQ expr
+  49          | expr AND expr
+  50          | expr OR expr
+
+  51  qweb_list :
+  52            | expr
+  53            | qweb_list COMMA expr
+
+  54  dict :
+  55       | expr COLON expr
+  56       | dict COMMA expr COLON expr
+
+  57  list_op : expr DOT APPEND LPAREN expr RPAREN
+  58          | expr DOT REMOVE LPAREN expr RPAREN
+  59          | expr DOT LENGTH LPAREN RPAREN
+
+  60  html_op : expr DOT CREATEHEADER LPAREN expr RPAREN
+  61          | expr DOT CREATEPARAGRAPH LPAREN expr RPAREN
+  62          | expr DOT CREATETABLE LPAREN expr RPAREN
+  63          | expr DOT CREATEUNORDEREDLIST LPAREN expr RPAREN
+
+  64  obj_op : expr DOT ID
+  65         | expr DOT ID ASSIGN expr
+
+  66  func_decl : FUNCTION ID LPAREN formal_opt RPAREN COLON stmt_list END
+
+  67  actuals_opt :
+  68              | actuals_list
+
+  69  actuals_list : expr
+  70               | actuals_list COMMA expr
+
+  71  formal_opt :
+  72             | formal_list
+
+  73  formal_list : typ ID
+  74              | formal_list COMMA typ ID
+
+  75  typ : INT
+  76      | BOOL
+  77      | FLOAT
+  78      | CHAR
+  79      | RECT
+  80      | CIRC
+  81      | TRI
+  82      | SQRE
+  83      | ELPS
+  84      | POLY
+  85      | POINT
+  86      | LINE
+
+  87  literal : INT_LITERAL
+  88          | STRING_LITERAL
+  89          | BOOL_LITERAL
+  90          | FLOAT_LITERAL
+
+  91  %entry% : '\001' program
+
+state 0
+	$accept : . %entry% $end  (0)
+
+	'\001'  shift 1
+	.  error
+
+	%entry%  goto 2
+
+
+state 1
+	%entry% : '\001' . program  (91)
+	func_decl_list : .  (2)
+
+	.  reduce 2
+
+	program  goto 3
+	func_decl_list  goto 4
+
+
+state 2
+	$accept : %entry% . $end  (0)
+
+	$end  accept
+
+
+state 3
+	%entry% : '\001' program .  (91)
+
+	.  reduce 91
+
+
+state 4
+	program : func_decl_list . EOF  (1)
+	func_decl_list : func_decl_list . func_decl  (3)
+
+	FUNCTION  shift 5
+	EOF  shift 6
+	.  error
+
+	func_decl  goto 7
+
+
+state 5
+	func_decl : FUNCTION . ID LPAREN formal_opt RPAREN COLON stmt_list END  (66)
+
+	ID  shift 8
+	.  error
+
+
+state 6
+	program : func_decl_list EOF .  (1)
+
+	.  reduce 1
+
+
+state 7
+	func_decl_list : func_decl_list func_decl .  (3)
+
+	.  reduce 3
+
+
+state 8
+	func_decl : FUNCTION ID . LPAREN formal_opt RPAREN COLON stmt_list END  (66)
+
+	LPAREN  shift 9
+	.  error
+
+
+state 9
+	func_decl : FUNCTION ID LPAREN . formal_opt RPAREN COLON stmt_list END  (66)
+	formal_opt : .  (71)
+
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	RPAREN  reduce 71
+
+	typ  goto 22
+	formal_opt  goto 23
+	formal_list  goto 24
+
+
+state 10
+	typ : INT .  (75)
+
+	.  reduce 75
+
+
+state 11
+	typ : BOOL .  (76)
+
+	.  reduce 76
+
+
+state 12
+	typ : FLOAT .  (77)
+
+	.  reduce 77
+
+
+state 13
+	typ : CHAR .  (78)
+
+	.  reduce 78
+
+
+state 14
+	typ : RECT .  (79)
+
+	.  reduce 79
+
+
+state 15
+	typ : CIRC .  (80)
+
+	.  reduce 80
+
+
+state 16
+	typ : TRI .  (81)
+
+	.  reduce 81
+
+
+state 17
+	typ : SQRE .  (82)
+
+	.  reduce 82
+
+
+state 18
+	typ : ELPS .  (83)
+
+	.  reduce 83
+
+
+state 19
+	typ : POLY .  (84)
+
+	.  reduce 84
+
+
+state 20
+	typ : POINT .  (85)
+
+	.  reduce 85
+
+
+state 21
+	typ : LINE .  (86)
+
+	.  reduce 86
+
+
+state 22
+	formal_list : typ . ID  (73)
+
+	ID  shift 25
+	.  error
+
+
+state 23
+	func_decl : FUNCTION ID LPAREN formal_opt . RPAREN COLON stmt_list END  (66)
+
+	RPAREN  shift 26
+	.  error
+
+
+state 24
+	formal_opt : formal_list .  (72)
+	formal_list : formal_list . COMMA typ ID  (74)
+
+	COMMA  shift 27
+	RPAREN  reduce 72
+
+
+state 25
+	formal_list : typ ID .  (73)
+
+	.  reduce 73
+
+
+state 26
+	func_decl : FUNCTION ID LPAREN formal_opt RPAREN . COLON stmt_list END  (66)
+
+	COLON  shift 28
+	.  error
+
+
+state 27
+	formal_list : formal_list COMMA . typ ID  (74)
+
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	.  error
+
+	typ  goto 29
+
+
+state 28
+	func_decl : FUNCTION ID LPAREN formal_opt RPAREN COLON . stmt_list END  (66)
+	stmt_list : .  (15)
+
+	.  reduce 15
+
+	stmt_list  goto 30
+
+
+state 29
+	formal_list : formal_list COMMA typ . ID  (74)
+
+	ID  shift 31
+	.  error
+
+
+state 30
+	stmt_list : stmt_list . stmt  (16)
+	func_decl : FUNCTION ID LPAREN formal_opt RPAREN COLON stmt_list . END  (66)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	DISPLAY  shift 36
+	OUTPUT  shift 37
+	IF  shift 38
+	FOR  shift 39
+	REPEAT  shift 40
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	END  shift 42
+	OBJECT  shift 43
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	stmt  goto 50
+	expr  goto 51
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 31
+	formal_list : formal_list COMMA typ ID .  (74)
+
+	.  reduce 74
+
+
+state 32
+	expr : LPAREN . expr RPAREN  (34)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	expr  goto 58
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 33
+	expr : LBRACE . dict RBRACE  (35)
+	dict : .  (54)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	RBRACE  reduce 54
+	COMMA  reduce 54
+
+	typ  goto 49
+	expr  goto 59
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+	dict  goto 60
+
+
+state 34
+	arith_op : MINUS . expr  (37)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	expr  goto 61
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 35
+	bool_op : NOT . expr  (42)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	expr  goto 62
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 36
+	stmt : DISPLAY . expr END  (11)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	expr  goto 63
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 37
+	stmt : OUTPUT . END  (13)
+	stmt : OUTPUT . expr END  (14)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	END  shift 64
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	expr  goto 65
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 38
+	stmt : IF . expr COLON stmt_list ENDIF otherwiseif_list  (9)
+	stmt : IF . expr COLON stmt_list ENDIF otherwiseif_list OTHERWISE COLON stmt_list ENDOTHERWISE  (10)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	expr  goto 66
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 39
+	stmt : FOR . ID IN expr COLON loop_stmt_list ENDFOR  (8)
+
+	ID  shift 67
+	.  error
+
+
+state 40
+	stmt : REPEAT . expr COLON loop_stmt_list ENDREPEAT  (7)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	expr  goto 68
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 41
+	expr : LBRACKET . qweb_list RBRACKET  (28)
+	qweb_list : .  (51)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	COMMA  reduce 51
+	RBRACKET  reduce 51
+
+	typ  goto 49
+	expr  goto 69
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	qweb_list  goto 70
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 42
+	func_decl : FUNCTION ID LPAREN formal_opt RPAREN COLON stmt_list END .  (66)
+
+	.  reduce 66
+
+
+state 43
+	stmt : OBJECT . obj_list END  (12)
+
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	.  error
+
+	obj_list  goto 71
+	typ  goto 72
+
+
+state 44
+	expr : ID . ASSIGN expr  (33)
+	expr : ID . LPAREN actuals_opt RPAREN  (36)
+
+	LPAREN  shift 73
+	ASSIGN  shift 74
+	.  error
+
+
+state 45
+	literal : INT_LITERAL .  (87)
+
+	.  reduce 87
+
+
+state 46
+	literal : STRING_LITERAL .  (88)
+
+	.  reduce 88
+
+
+state 47
+	literal : BOOL_LITERAL .  (89)
+
+	.  reduce 89
+
+
+state 48
+	literal : FLOAT_LITERAL .  (90)
+
+	.  reduce 90
+
+
+state 49
+	expr : typ . ID  (32)
+
+	ID  shift 75
+	.  error
+
+
+state 50
+	stmt_list : stmt_list stmt .  (16)
+
+	.  reduce 16
+
+
+state 51
+	stmt : expr . END  (6)
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+
+	PLUS  shift 76
+	MINUS  shift 77
+	TIMES  shift 78
+	DIVIDE  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	LT  shift 82
+	LEQ  shift 83
+	GT  shift 84
+	GEQ  shift 85
+	AND  shift 86
+	OR  shift 87
+	DOT  shift 88
+	END  shift 89
+	.  error
+
+
+state 52
+	expr : literal .  (25)
+
+	.  reduce 25
+
+
+state 53
+	expr : arith_op .  (26)
+
+	.  reduce 26
+
+
+state 54
+	expr : bool_op .  (27)
+
+	.  reduce 27
+
+
+state 55
+	expr : list_op .  (29)
+
+	.  reduce 29
+
+
+state 56
+	expr : html_op .  (30)
+
+	.  reduce 30
+
+
+state 57
+	expr : obj_op .  (31)
+
+	.  reduce 31
+
+
+state 58
+	expr : LPAREN expr . RPAREN  (34)
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+
+	RPAREN  shift 90
+	PLUS  shift 76
+	MINUS  shift 77
+	TIMES  shift 78
+	DIVIDE  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	LT  shift 82
+	LEQ  shift 83
+	GT  shift 84
+	GEQ  shift 85
+	AND  shift 86
+	OR  shift 87
+	DOT  shift 88
+	.  error
+
+
+state 59
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	dict : expr . COLON expr  (55)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+
+	PLUS  shift 76
+	MINUS  shift 77
+	TIMES  shift 78
+	DIVIDE  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	LT  shift 82
+	LEQ  shift 83
+	GT  shift 84
+	GEQ  shift 85
+	AND  shift 86
+	OR  shift 87
+	COLON  shift 91
+	DOT  shift 88
+	.  error
+
+
+state 60
+	expr : LBRACE dict . RBRACE  (35)
+	dict : dict . COMMA expr COLON expr  (56)
+
+	RBRACE  shift 92
+	COMMA  shift 93
+	.  error
+
+
+state 61
+	arith_op : MINUS expr .  (37)
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+
+	TIMES  shift 78
+	DIVIDE  shift 79
+	DOT  shift 88
+	RPAREN  reduce 37
+	RBRACE  reduce 37
+	COMMA  reduce 37
+	PLUS  reduce 37
+	MINUS  reduce 37
+	EQ  reduce 37
+	NEQ  reduce 37
+	LT  reduce 37
+	LEQ  reduce 37
+	GT  reduce 37
+	GEQ  reduce 37
+	AND  reduce 37
+	OR  reduce 37
+	RBRACKET  reduce 37
+	COLON  reduce 37
+	END  reduce 37
+
+
+state 62
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : NOT expr .  (42)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+
+	DOT  shift 88
+	RPAREN  reduce 42
+	RBRACE  reduce 42
+	COMMA  reduce 42
+	PLUS  reduce 42
+	MINUS  reduce 42
+	TIMES  reduce 42
+	DIVIDE  reduce 42
+	EQ  reduce 42
+	NEQ  reduce 42
+	LT  reduce 42
+	LEQ  reduce 42
+	GT  reduce 42
+	GEQ  reduce 42
+	AND  reduce 42
+	OR  reduce 42
+	RBRACKET  reduce 42
+	COLON  reduce 42
+	END  reduce 42
+
+
+state 63
+	stmt : DISPLAY expr . END  (11)
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+
+	PLUS  shift 76
+	MINUS  shift 77
+	TIMES  shift 78
+	DIVIDE  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	LT  shift 82
+	LEQ  shift 83
+	GT  shift 84
+	GEQ  shift 85
+	AND  shift 86
+	OR  shift 87
+	DOT  shift 88
+	END  shift 94
+	.  error
+
+
+state 64
+	stmt : OUTPUT END .  (13)
+
+	.  reduce 13
+
+
+state 65
+	stmt : OUTPUT expr . END  (14)
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+
+	PLUS  shift 76
+	MINUS  shift 77
+	TIMES  shift 78
+	DIVIDE  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	LT  shift 82
+	LEQ  shift 83
+	GT  shift 84
+	GEQ  shift 85
+	AND  shift 86
+	OR  shift 87
+	DOT  shift 88
+	END  shift 95
+	.  error
+
+
+state 66
+	stmt : IF expr . COLON stmt_list ENDIF otherwiseif_list  (9)
+	stmt : IF expr . COLON stmt_list ENDIF otherwiseif_list OTHERWISE COLON stmt_list ENDOTHERWISE  (10)
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+
+	PLUS  shift 76
+	MINUS  shift 77
+	TIMES  shift 78
+	DIVIDE  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	LT  shift 82
+	LEQ  shift 83
+	GT  shift 84
+	GEQ  shift 85
+	AND  shift 86
+	OR  shift 87
+	COLON  shift 96
+	DOT  shift 88
+	.  error
+
+
+state 67
+	stmt : FOR ID . IN expr COLON loop_stmt_list ENDFOR  (8)
+
+	IN  shift 97
+	.  error
+
+
+state 68
+	stmt : REPEAT expr . COLON loop_stmt_list ENDREPEAT  (7)
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+
+	PLUS  shift 76
+	MINUS  shift 77
+	TIMES  shift 78
+	DIVIDE  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	LT  shift 82
+	LEQ  shift 83
+	GT  shift 84
+	GEQ  shift 85
+	AND  shift 86
+	OR  shift 87
+	COLON  shift 98
+	DOT  shift 88
+	.  error
+
+
+state 69
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	qweb_list : expr .  (52)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+
+	PLUS  shift 76
+	MINUS  shift 77
+	TIMES  shift 78
+	DIVIDE  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	LT  shift 82
+	LEQ  shift 83
+	GT  shift 84
+	GEQ  shift 85
+	AND  shift 86
+	OR  shift 87
+	DOT  shift 88
+	COMMA  reduce 52
+	RBRACKET  reduce 52
+
+
+state 70
+	expr : LBRACKET qweb_list . RBRACKET  (28)
+	qweb_list : qweb_list . COMMA expr  (53)
+
+	COMMA  shift 99
+	RBRACKET  shift 100
+	.  error
+
+
+state 71
+	obj_list : obj_list . COMMA ID  (5)
+	stmt : OBJECT obj_list . END  (12)
+
+	COMMA  shift 101
+	END  shift 102
+	.  error
+
+
+state 72
+	obj_list : typ . ID  (4)
+
+	ID  shift 103
+	.  error
+
+
+state 73
+	expr : ID LPAREN . actuals_opt RPAREN  (36)
+	actuals_opt : .  (67)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	RPAREN  reduce 67
+
+	typ  goto 49
+	expr  goto 104
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+	actuals_opt  goto 105
+	actuals_list  goto 106
+
+
+state 74
+	expr : ID ASSIGN . expr  (33)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	expr  goto 107
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 75
+	expr : typ ID .  (32)
+
+	.  reduce 32
+
+
+state 76
+	arith_op : expr PLUS . expr  (38)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	expr  goto 108
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 77
+	arith_op : expr MINUS . expr  (39)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	expr  goto 109
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 78
+	arith_op : expr TIMES . expr  (40)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	expr  goto 110
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 79
+	arith_op : expr DIVIDE . expr  (41)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	expr  goto 111
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 80
+	bool_op : expr EQ . expr  (43)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	expr  goto 112
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 81
+	bool_op : expr NEQ . expr  (44)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	expr  goto 113
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 82
+	bool_op : expr LT . expr  (45)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	expr  goto 114
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 83
+	bool_op : expr LEQ . expr  (46)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	expr  goto 115
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 84
+	bool_op : expr GT . expr  (47)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	expr  goto 116
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 85
+	bool_op : expr GEQ . expr  (48)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	expr  goto 117
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 86
+	bool_op : expr AND . expr  (49)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	expr  goto 118
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 87
+	bool_op : expr OR . expr  (50)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	expr  goto 119
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 88
+	list_op : expr DOT . APPEND LPAREN expr RPAREN  (57)
+	list_op : expr DOT . REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr DOT . LENGTH LPAREN RPAREN  (59)
+	html_op : expr DOT . CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr DOT . CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr DOT . CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr DOT . CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr DOT . ID  (64)
+	obj_op : expr DOT . ID ASSIGN expr  (65)
+
+	LENGTH  shift 120
+	APPEND  shift 121
+	REMOVE  shift 122
+	CREATEHEADER  shift 123
+	CREATEPARAGRAPH  shift 124
+	CREATETABLE  shift 125
+	CREATEUNORDEREDLIST  shift 126
+	ID  shift 127
+	.  error
+
+
+state 89
+	stmt : expr END .  (6)
+
+	.  reduce 6
+
+
+state 90
+	expr : LPAREN expr RPAREN .  (34)
+
+	.  reduce 34
+
+
+state 91
+	dict : expr COLON . expr  (55)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	expr  goto 128
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 92
+	expr : LBRACE dict RBRACE .  (35)
+
+	.  reduce 35
+
+
+state 93
+	dict : dict COMMA . expr COLON expr  (56)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	expr  goto 129
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 94
+	stmt : DISPLAY expr END .  (11)
+
+	.  reduce 11
+
+
+state 95
+	stmt : OUTPUT expr END .  (14)
+
+	.  reduce 14
+
+
+state 96
+	stmt : IF expr COLON . stmt_list ENDIF otherwiseif_list  (9)
+	stmt : IF expr COLON . stmt_list ENDIF otherwiseif_list OTHERWISE COLON stmt_list ENDOTHERWISE  (10)
+	stmt_list : .  (15)
+
+	.  reduce 15
+
+	stmt_list  goto 130
+
+
+state 97
+	stmt : FOR ID IN . expr COLON loop_stmt_list ENDFOR  (8)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	expr  goto 131
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 98
+	stmt : REPEAT expr COLON . loop_stmt_list ENDREPEAT  (7)
+	loop_stmt_list : .  (17)
+
+	.  reduce 17
+
+	loop_stmt_list  goto 132
+
+
+state 99
+	qweb_list : qweb_list COMMA . expr  (53)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	expr  goto 133
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 100
+	expr : LBRACKET qweb_list RBRACKET .  (28)
+
+	.  reduce 28
+
+
+state 101
+	obj_list : obj_list COMMA . ID  (5)
+
+	ID  shift 134
+	.  error
+
+
+state 102
+	stmt : OBJECT obj_list END .  (12)
+
+	.  reduce 12
+
+
+state 103
+	obj_list : typ ID .  (4)
+
+	.  reduce 4
+
+
+state 104
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+	actuals_list : expr .  (69)
+
+	PLUS  shift 76
+	MINUS  shift 77
+	TIMES  shift 78
+	DIVIDE  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	LT  shift 82
+	LEQ  shift 83
+	GT  shift 84
+	GEQ  shift 85
+	AND  shift 86
+	OR  shift 87
+	DOT  shift 88
+	RPAREN  reduce 69
+	COMMA  reduce 69
+
+
+state 105
+	expr : ID LPAREN actuals_opt . RPAREN  (36)
+
+	RPAREN  shift 135
+	.  error
+
+
+state 106
+	actuals_opt : actuals_list .  (68)
+	actuals_list : actuals_list . COMMA expr  (70)
+
+	COMMA  shift 136
+	RPAREN  reduce 68
+
+
+state 107
+	expr : ID ASSIGN expr .  (33)
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+
+	PLUS  shift 76
+	MINUS  shift 77
+	TIMES  shift 78
+	DIVIDE  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	LT  shift 82
+	LEQ  shift 83
+	GT  shift 84
+	GEQ  shift 85
+	AND  shift 86
+	OR  shift 87
+	DOT  shift 88
+	RPAREN  reduce 33
+	RBRACE  reduce 33
+	COMMA  reduce 33
+	RBRACKET  reduce 33
+	COLON  reduce 33
+	END  reduce 33
+
+
+state 108
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr PLUS expr .  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+
+	TIMES  shift 78
+	DIVIDE  shift 79
+	DOT  shift 88
+	RPAREN  reduce 38
+	RBRACE  reduce 38
+	COMMA  reduce 38
+	PLUS  reduce 38
+	MINUS  reduce 38
+	EQ  reduce 38
+	NEQ  reduce 38
+	LT  reduce 38
+	LEQ  reduce 38
+	GT  reduce 38
+	GEQ  reduce 38
+	AND  reduce 38
+	OR  reduce 38
+	RBRACKET  reduce 38
+	COLON  reduce 38
+	END  reduce 38
+
+
+state 109
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr MINUS expr .  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+
+	TIMES  shift 78
+	DIVIDE  shift 79
+	DOT  shift 88
+	RPAREN  reduce 39
+	RBRACE  reduce 39
+	COMMA  reduce 39
+	PLUS  reduce 39
+	MINUS  reduce 39
+	EQ  reduce 39
+	NEQ  reduce 39
+	LT  reduce 39
+	LEQ  reduce 39
+	GT  reduce 39
+	GEQ  reduce 39
+	AND  reduce 39
+	OR  reduce 39
+	RBRACKET  reduce 39
+	COLON  reduce 39
+	END  reduce 39
+
+
+state 110
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr TIMES expr .  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+
+	DOT  shift 88
+	RPAREN  reduce 40
+	RBRACE  reduce 40
+	COMMA  reduce 40
+	PLUS  reduce 40
+	MINUS  reduce 40
+	TIMES  reduce 40
+	DIVIDE  reduce 40
+	EQ  reduce 40
+	NEQ  reduce 40
+	LT  reduce 40
+	LEQ  reduce 40
+	GT  reduce 40
+	GEQ  reduce 40
+	AND  reduce 40
+	OR  reduce 40
+	RBRACKET  reduce 40
+	COLON  reduce 40
+	END  reduce 40
+
+
+state 111
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	arith_op : expr DIVIDE expr .  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+
+	DOT  shift 88
+	RPAREN  reduce 41
+	RBRACE  reduce 41
+	COMMA  reduce 41
+	PLUS  reduce 41
+	MINUS  reduce 41
+	TIMES  reduce 41
+	DIVIDE  reduce 41
+	EQ  reduce 41
+	NEQ  reduce 41
+	LT  reduce 41
+	LEQ  reduce 41
+	GT  reduce 41
+	GEQ  reduce 41
+	AND  reduce 41
+	OR  reduce 41
+	RBRACKET  reduce 41
+	COLON  reduce 41
+	END  reduce 41
+
+
+state 112
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr EQ expr .  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+
+	PLUS  shift 76
+	MINUS  shift 77
+	TIMES  shift 78
+	DIVIDE  shift 79
+	LT  shift 82
+	LEQ  shift 83
+	GT  shift 84
+	GEQ  shift 85
+	DOT  shift 88
+	RPAREN  reduce 43
+	RBRACE  reduce 43
+	COMMA  reduce 43
+	EQ  reduce 43
+	NEQ  reduce 43
+	AND  reduce 43
+	OR  reduce 43
+	RBRACKET  reduce 43
+	COLON  reduce 43
+	END  reduce 43
+
+
+state 113
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr NEQ expr .  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+
+	PLUS  shift 76
+	MINUS  shift 77
+	TIMES  shift 78
+	DIVIDE  shift 79
+	LT  shift 82
+	LEQ  shift 83
+	GT  shift 84
+	GEQ  shift 85
+	DOT  shift 88
+	RPAREN  reduce 44
+	RBRACE  reduce 44
+	COMMA  reduce 44
+	EQ  reduce 44
+	NEQ  reduce 44
+	AND  reduce 44
+	OR  reduce 44
+	RBRACKET  reduce 44
+	COLON  reduce 44
+	END  reduce 44
+
+
+state 114
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr LT expr .  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+
+	PLUS  shift 76
+	MINUS  shift 77
+	TIMES  shift 78
+	DIVIDE  shift 79
+	DOT  shift 88
+	RPAREN  reduce 45
+	RBRACE  reduce 45
+	COMMA  reduce 45
+	EQ  reduce 45
+	NEQ  reduce 45
+	LT  reduce 45
+	LEQ  reduce 45
+	GT  reduce 45
+	GEQ  reduce 45
+	AND  reduce 45
+	OR  reduce 45
+	RBRACKET  reduce 45
+	COLON  reduce 45
+	END  reduce 45
+
+
+state 115
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr LEQ expr .  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+
+	PLUS  shift 76
+	MINUS  shift 77
+	TIMES  shift 78
+	DIVIDE  shift 79
+	DOT  shift 88
+	RPAREN  reduce 46
+	RBRACE  reduce 46
+	COMMA  reduce 46
+	EQ  reduce 46
+	NEQ  reduce 46
+	LT  reduce 46
+	LEQ  reduce 46
+	GT  reduce 46
+	GEQ  reduce 46
+	AND  reduce 46
+	OR  reduce 46
+	RBRACKET  reduce 46
+	COLON  reduce 46
+	END  reduce 46
+
+
+state 116
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr GT expr .  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+
+	PLUS  shift 76
+	MINUS  shift 77
+	TIMES  shift 78
+	DIVIDE  shift 79
+	DOT  shift 88
+	RPAREN  reduce 47
+	RBRACE  reduce 47
+	COMMA  reduce 47
+	EQ  reduce 47
+	NEQ  reduce 47
+	LT  reduce 47
+	LEQ  reduce 47
+	GT  reduce 47
+	GEQ  reduce 47
+	AND  reduce 47
+	OR  reduce 47
+	RBRACKET  reduce 47
+	COLON  reduce 47
+	END  reduce 47
+
+
+state 117
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr GEQ expr .  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+
+	PLUS  shift 76
+	MINUS  shift 77
+	TIMES  shift 78
+	DIVIDE  shift 79
+	DOT  shift 88
+	RPAREN  reduce 48
+	RBRACE  reduce 48
+	COMMA  reduce 48
+	EQ  reduce 48
+	NEQ  reduce 48
+	LT  reduce 48
+	LEQ  reduce 48
+	GT  reduce 48
+	GEQ  reduce 48
+	AND  reduce 48
+	OR  reduce 48
+	RBRACKET  reduce 48
+	COLON  reduce 48
+	END  reduce 48
+
+
+state 118
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr AND expr .  (49)
+	bool_op : expr . OR expr  (50)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+
+	PLUS  shift 76
+	MINUS  shift 77
+	TIMES  shift 78
+	DIVIDE  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	LT  shift 82
+	LEQ  shift 83
+	GT  shift 84
+	GEQ  shift 85
+	DOT  shift 88
+	RPAREN  reduce 49
+	RBRACE  reduce 49
+	COMMA  reduce 49
+	AND  reduce 49
+	OR  reduce 49
+	RBRACKET  reduce 49
+	COLON  reduce 49
+	END  reduce 49
+
+
+state 119
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	bool_op : expr OR expr .  (50)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+
+	PLUS  shift 76
+	MINUS  shift 77
+	TIMES  shift 78
+	DIVIDE  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	LT  shift 82
+	LEQ  shift 83
+	GT  shift 84
+	GEQ  shift 85
+	AND  shift 86
+	DOT  shift 88
+	RPAREN  reduce 50
+	RBRACE  reduce 50
+	COMMA  reduce 50
+	OR  reduce 50
+	RBRACKET  reduce 50
+	COLON  reduce 50
+	END  reduce 50
+
+
+state 120
+	list_op : expr DOT LENGTH . LPAREN RPAREN  (59)
+
+	LPAREN  shift 137
+	.  error
+
+
+state 121
+	list_op : expr DOT APPEND . LPAREN expr RPAREN  (57)
+
+	LPAREN  shift 138
+	.  error
+
+
+state 122
+	list_op : expr DOT REMOVE . LPAREN expr RPAREN  (58)
+
+	LPAREN  shift 139
+	.  error
+
+
+state 123
+	html_op : expr DOT CREATEHEADER . LPAREN expr RPAREN  (60)
+
+	LPAREN  shift 140
+	.  error
+
+
+state 124
+	html_op : expr DOT CREATEPARAGRAPH . LPAREN expr RPAREN  (61)
+
+	LPAREN  shift 141
+	.  error
+
+
+state 125
+	html_op : expr DOT CREATETABLE . LPAREN expr RPAREN  (62)
+
+	LPAREN  shift 142
+	.  error
+
+
+state 126
+	html_op : expr DOT CREATEUNORDEREDLIST . LPAREN expr RPAREN  (63)
+
+	LPAREN  shift 143
+	.  error
+
+
+state 127
+	obj_op : expr DOT ID .  (64)
+	obj_op : expr DOT ID . ASSIGN expr  (65)
+
+	ASSIGN  shift 144
+	RPAREN  reduce 64
+	RBRACE  reduce 64
+	COMMA  reduce 64
+	PLUS  reduce 64
+	MINUS  reduce 64
+	TIMES  reduce 64
+	DIVIDE  reduce 64
+	EQ  reduce 64
+	NEQ  reduce 64
+	LT  reduce 64
+	LEQ  reduce 64
+	GT  reduce 64
+	GEQ  reduce 64
+	AND  reduce 64
+	OR  reduce 64
+	RBRACKET  reduce 64
+	COLON  reduce 64
+	DOT  reduce 64
+	END  reduce 64
+
+
+state 128
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	dict : expr COLON expr .  (55)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+
+	PLUS  shift 76
+	MINUS  shift 77
+	TIMES  shift 78
+	DIVIDE  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	LT  shift 82
+	LEQ  shift 83
+	GT  shift 84
+	GEQ  shift 85
+	AND  shift 86
+	OR  shift 87
+	DOT  shift 88
+	RBRACE  reduce 55
+	COMMA  reduce 55
+
+
+state 129
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	dict : dict COMMA expr . COLON expr  (56)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+
+	PLUS  shift 76
+	MINUS  shift 77
+	TIMES  shift 78
+	DIVIDE  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	LT  shift 82
+	LEQ  shift 83
+	GT  shift 84
+	GEQ  shift 85
+	AND  shift 86
+	OR  shift 87
+	COLON  shift 145
+	DOT  shift 88
+	.  error
+
+
+state 130
+	stmt : IF expr COLON stmt_list . ENDIF otherwiseif_list  (9)
+	stmt : IF expr COLON stmt_list . ENDIF otherwiseif_list OTHERWISE COLON stmt_list ENDOTHERWISE  (10)
+	stmt_list : stmt_list . stmt  (16)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	DISPLAY  shift 36
+	OUTPUT  shift 37
+	IF  shift 38
+	ENDIF  shift 146
+	FOR  shift 39
+	REPEAT  shift 40
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	OBJECT  shift 43
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	stmt  goto 50
+	expr  goto 51
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 131
+	stmt : FOR ID IN expr . COLON loop_stmt_list ENDFOR  (8)
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+
+	PLUS  shift 76
+	MINUS  shift 77
+	TIMES  shift 78
+	DIVIDE  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	LT  shift 82
+	LEQ  shift 83
+	GT  shift 84
+	GEQ  shift 85
+	AND  shift 86
+	OR  shift 87
+	COLON  shift 147
+	DOT  shift 88
+	.  error
+
+
+state 132
+	stmt : REPEAT expr COLON loop_stmt_list . ENDREPEAT  (7)
+	loop_stmt_list : loop_stmt_list . loop_stmt  (18)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	DISPLAY  shift 36
+	OUTPUT  shift 37
+	IF  shift 38
+	FOR  shift 39
+	REPEAT  shift 40
+	ENDREPEAT  shift 148
+	CONTINUE  shift 149
+	PASS  shift 150
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	OBJECT  shift 43
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	stmt  goto 151
+	expr  goto 51
+	loop_stmt  goto 152
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 133
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	qweb_list : qweb_list COMMA expr .  (53)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+
+	PLUS  shift 76
+	MINUS  shift 77
+	TIMES  shift 78
+	DIVIDE  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	LT  shift 82
+	LEQ  shift 83
+	GT  shift 84
+	GEQ  shift 85
+	AND  shift 86
+	OR  shift 87
+	DOT  shift 88
+	COMMA  reduce 53
+	RBRACKET  reduce 53
+
+
+state 134
+	obj_list : obj_list COMMA ID .  (5)
+
+	.  reduce 5
+
+
+state 135
+	expr : ID LPAREN actuals_opt RPAREN .  (36)
+
+	.  reduce 36
+
+
+state 136
+	actuals_list : actuals_list COMMA . expr  (70)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	expr  goto 153
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 137
+	list_op : expr DOT LENGTH LPAREN . RPAREN  (59)
+
+	RPAREN  shift 154
+	.  error
+
+
+state 138
+	list_op : expr DOT APPEND LPAREN . expr RPAREN  (57)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	expr  goto 155
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 139
+	list_op : expr DOT REMOVE LPAREN . expr RPAREN  (58)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	expr  goto 156
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 140
+	html_op : expr DOT CREATEHEADER LPAREN . expr RPAREN  (60)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	expr  goto 157
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 141
+	html_op : expr DOT CREATEPARAGRAPH LPAREN . expr RPAREN  (61)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	expr  goto 158
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 142
+	html_op : expr DOT CREATETABLE LPAREN . expr RPAREN  (62)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	expr  goto 159
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 143
+	html_op : expr DOT CREATEUNORDEREDLIST LPAREN . expr RPAREN  (63)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	expr  goto 160
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 144
+	obj_op : expr DOT ID ASSIGN . expr  (65)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	expr  goto 161
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 145
+	dict : dict COMMA expr COLON . expr  (56)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	expr  goto 162
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 146
+	stmt : IF expr COLON stmt_list ENDIF . otherwiseif_list  (9)
+	stmt : IF expr COLON stmt_list ENDIF . otherwiseif_list OTHERWISE COLON stmt_list ENDOTHERWISE  (10)
+	otherwiseif_list : .  (22)
+
+	.  reduce 22
+
+	otherwiseif_list  goto 163
+
+
+state 147
+	stmt : FOR ID IN expr COLON . loop_stmt_list ENDFOR  (8)
+	loop_stmt_list : .  (17)
+
+	.  reduce 17
+
+	loop_stmt_list  goto 164
+
+
+state 148
+	stmt : REPEAT expr COLON loop_stmt_list ENDREPEAT .  (7)
+
+	.  reduce 7
+
+
+state 149
+	loop_stmt : CONTINUE . END  (21)
+
+	END  shift 165
+	.  error
+
+
+state 150
+	loop_stmt : PASS . END  (20)
+
+	END  shift 166
+	.  error
+
+
+state 151
+	loop_stmt : stmt .  (19)
+
+	.  reduce 19
+
+
+state 152
+	loop_stmt_list : loop_stmt_list loop_stmt .  (18)
+
+	.  reduce 18
+
+
+state 153
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+	actuals_list : actuals_list COMMA expr .  (70)
+
+	PLUS  shift 76
+	MINUS  shift 77
+	TIMES  shift 78
+	DIVIDE  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	LT  shift 82
+	LEQ  shift 83
+	GT  shift 84
+	GEQ  shift 85
+	AND  shift 86
+	OR  shift 87
+	DOT  shift 88
+	RPAREN  reduce 70
+	COMMA  reduce 70
+
+
+state 154
+	list_op : expr DOT LENGTH LPAREN RPAREN .  (59)
+
+	.  reduce 59
+
+
+state 155
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr DOT APPEND LPAREN expr . RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+
+	RPAREN  shift 167
+	PLUS  shift 76
+	MINUS  shift 77
+	TIMES  shift 78
+	DIVIDE  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	LT  shift 82
+	LEQ  shift 83
+	GT  shift 84
+	GEQ  shift 85
+	AND  shift 86
+	OR  shift 87
+	DOT  shift 88
+	.  error
+
+
+state 156
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr DOT REMOVE LPAREN expr . RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+
+	RPAREN  shift 168
+	PLUS  shift 76
+	MINUS  shift 77
+	TIMES  shift 78
+	DIVIDE  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	LT  shift 82
+	LEQ  shift 83
+	GT  shift 84
+	GEQ  shift 85
+	AND  shift 86
+	OR  shift 87
+	DOT  shift 88
+	.  error
+
+
+state 157
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr DOT CREATEHEADER LPAREN expr . RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+
+	RPAREN  shift 169
+	PLUS  shift 76
+	MINUS  shift 77
+	TIMES  shift 78
+	DIVIDE  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	LT  shift 82
+	LEQ  shift 83
+	GT  shift 84
+	GEQ  shift 85
+	AND  shift 86
+	OR  shift 87
+	DOT  shift 88
+	.  error
+
+
+state 158
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr DOT CREATEPARAGRAPH LPAREN expr . RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+
+	RPAREN  shift 170
+	PLUS  shift 76
+	MINUS  shift 77
+	TIMES  shift 78
+	DIVIDE  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	LT  shift 82
+	LEQ  shift 83
+	GT  shift 84
+	GEQ  shift 85
+	AND  shift 86
+	OR  shift 87
+	DOT  shift 88
+	.  error
+
+
+state 159
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr DOT CREATETABLE LPAREN expr . RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+
+	RPAREN  shift 171
+	PLUS  shift 76
+	MINUS  shift 77
+	TIMES  shift 78
+	DIVIDE  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	LT  shift 82
+	LEQ  shift 83
+	GT  shift 84
+	GEQ  shift 85
+	AND  shift 86
+	OR  shift 87
+	DOT  shift 88
+	.  error
+
+
+state 160
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	html_op : expr DOT CREATEUNORDEREDLIST LPAREN expr . RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+
+	RPAREN  shift 172
+	PLUS  shift 76
+	MINUS  shift 77
+	TIMES  shift 78
+	DIVIDE  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	LT  shift 82
+	LEQ  shift 83
+	GT  shift 84
+	GEQ  shift 85
+	AND  shift 86
+	OR  shift 87
+	DOT  shift 88
+	.  error
+
+
+state 161
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+	obj_op : expr DOT ID ASSIGN expr .  (65)
+
+	PLUS  shift 76
+	MINUS  shift 77
+	TIMES  shift 78
+	DIVIDE  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	LT  shift 82
+	LEQ  shift 83
+	GT  shift 84
+	GEQ  shift 85
+	AND  shift 86
+	OR  shift 87
+	DOT  shift 88
+	RPAREN  reduce 65
+	RBRACE  reduce 65
+	COMMA  reduce 65
+	RBRACKET  reduce 65
+	COLON  reduce 65
+	END  reduce 65
+
+
+state 162
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	dict : dict COMMA expr COLON expr .  (56)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+
+	PLUS  shift 76
+	MINUS  shift 77
+	TIMES  shift 78
+	DIVIDE  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	LT  shift 82
+	LEQ  shift 83
+	GT  shift 84
+	GEQ  shift 85
+	AND  shift 86
+	OR  shift 87
+	DOT  shift 88
+	RBRACE  reduce 56
+	COMMA  reduce 56
+
+
+state 163
+	stmt : IF expr COLON stmt_list ENDIF otherwiseif_list .  (9)
+	stmt : IF expr COLON stmt_list ENDIF otherwiseif_list . OTHERWISE COLON stmt_list ENDOTHERWISE  (10)
+	otherwiseif_list : otherwiseif_list . otherwiseif_stmt  (23)
+
+	OTHERWISE  shift 173
+	OTHERWISEIF  shift 174
+	LPAREN  reduce 9
+	LBRACE  reduce 9
+	MINUS  reduce 9
+	NOT  reduce 9
+	DISPLAY  reduce 9
+	OUTPUT  reduce 9
+	IF  reduce 9
+	ENDIF  reduce 9
+	ENDOTHERWISE  reduce 9
+	ENDOTHERWISEIF  reduce 9
+	FOR  reduce 9
+	ENDFOR  reduce 9
+	REPEAT  reduce 9
+	ENDREPEAT  reduce 9
+	CONTINUE  reduce 9
+	PASS  reduce 9
+	INT  reduce 9
+	BOOL  reduce 9
+	FLOAT  reduce 9
+	CHAR  reduce 9
+	RECT  reduce 9
+	CIRC  reduce 9
+	TRI  reduce 9
+	SQRE  reduce 9
+	ELPS  reduce 9
+	POLY  reduce 9
+	POINT  reduce 9
+	LINE  reduce 9
+	LBRACKET  reduce 9
+	END  reduce 9
+	OBJECT  reduce 9
+	ID  reduce 9
+	INT_LITERAL  reduce 9
+	STRING_LITERAL  reduce 9
+	BOOL_LITERAL  reduce 9
+	FLOAT_LITERAL  reduce 9
+
+	otherwiseif_stmt  goto 175
+
+
+state 164
+	stmt : FOR ID IN expr COLON loop_stmt_list . ENDFOR  (8)
+	loop_stmt_list : loop_stmt_list . loop_stmt  (18)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	DISPLAY  shift 36
+	OUTPUT  shift 37
+	IF  shift 38
+	FOR  shift 39
+	ENDFOR  shift 176
+	REPEAT  shift 40
+	CONTINUE  shift 149
+	PASS  shift 150
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	OBJECT  shift 43
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	stmt  goto 151
+	expr  goto 51
+	loop_stmt  goto 152
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 165
+	loop_stmt : CONTINUE END .  (21)
+
+	.  reduce 21
+
+
+state 166
+	loop_stmt : PASS END .  (20)
+
+	.  reduce 20
+
+
+state 167
+	list_op : expr DOT APPEND LPAREN expr RPAREN .  (57)
+
+	.  reduce 57
+
+
+state 168
+	list_op : expr DOT REMOVE LPAREN expr RPAREN .  (58)
+
+	.  reduce 58
+
+
+state 169
+	html_op : expr DOT CREATEHEADER LPAREN expr RPAREN .  (60)
+
+	.  reduce 60
+
+
+state 170
+	html_op : expr DOT CREATEPARAGRAPH LPAREN expr RPAREN .  (61)
+
+	.  reduce 61
+
+
+state 171
+	html_op : expr DOT CREATETABLE LPAREN expr RPAREN .  (62)
+
+	.  reduce 62
+
+
+state 172
+	html_op : expr DOT CREATEUNORDEREDLIST LPAREN expr RPAREN .  (63)
+
+	.  reduce 63
+
+
+state 173
+	stmt : IF expr COLON stmt_list ENDIF otherwiseif_list OTHERWISE . COLON stmt_list ENDOTHERWISE  (10)
+
+	COLON  shift 177
+	.  error
+
+
+state 174
+	otherwiseif_stmt : OTHERWISEIF . expr COLON stmt_list ENDOTHERWISEIF  (24)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	expr  goto 178
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 175
+	otherwiseif_list : otherwiseif_list otherwiseif_stmt .  (23)
+
+	.  reduce 23
+
+
+state 176
+	stmt : FOR ID IN expr COLON loop_stmt_list ENDFOR .  (8)
+
+	.  reduce 8
+
+
+state 177
+	stmt : IF expr COLON stmt_list ENDIF otherwiseif_list OTHERWISE COLON . stmt_list ENDOTHERWISE  (10)
+	stmt_list : .  (15)
+
+	.  reduce 15
+
+	stmt_list  goto 179
+
+
+state 178
+	otherwiseif_stmt : OTHERWISEIF expr . COLON stmt_list ENDOTHERWISEIF  (24)
+	arith_op : expr . PLUS expr  (38)
+	arith_op : expr . MINUS expr  (39)
+	arith_op : expr . TIMES expr  (40)
+	arith_op : expr . DIVIDE expr  (41)
+	bool_op : expr . EQ expr  (43)
+	bool_op : expr . NEQ expr  (44)
+	bool_op : expr . LT expr  (45)
+	bool_op : expr . LEQ expr  (46)
+	bool_op : expr . GT expr  (47)
+	bool_op : expr . GEQ expr  (48)
+	bool_op : expr . AND expr  (49)
+	bool_op : expr . OR expr  (50)
+	list_op : expr . DOT APPEND LPAREN expr RPAREN  (57)
+	list_op : expr . DOT REMOVE LPAREN expr RPAREN  (58)
+	list_op : expr . DOT LENGTH LPAREN RPAREN  (59)
+	html_op : expr . DOT CREATEHEADER LPAREN expr RPAREN  (60)
+	html_op : expr . DOT CREATEPARAGRAPH LPAREN expr RPAREN  (61)
+	html_op : expr . DOT CREATETABLE LPAREN expr RPAREN  (62)
+	html_op : expr . DOT CREATEUNORDEREDLIST LPAREN expr RPAREN  (63)
+	obj_op : expr . DOT ID  (64)
+	obj_op : expr . DOT ID ASSIGN expr  (65)
+
+	PLUS  shift 76
+	MINUS  shift 77
+	TIMES  shift 78
+	DIVIDE  shift 79
+	EQ  shift 80
+	NEQ  shift 81
+	LT  shift 82
+	LEQ  shift 83
+	GT  shift 84
+	GEQ  shift 85
+	AND  shift 86
+	OR  shift 87
+	COLON  shift 180
+	DOT  shift 88
+	.  error
+
+
+state 179
+	stmt : IF expr COLON stmt_list ENDIF otherwiseif_list OTHERWISE COLON stmt_list . ENDOTHERWISE  (10)
+	stmt_list : stmt_list . stmt  (16)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	DISPLAY  shift 36
+	OUTPUT  shift 37
+	IF  shift 38
+	ENDOTHERWISE  shift 181
+	FOR  shift 39
+	REPEAT  shift 40
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	OBJECT  shift 43
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	stmt  goto 50
+	expr  goto 51
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 180
+	otherwiseif_stmt : OTHERWISEIF expr COLON . stmt_list ENDOTHERWISEIF  (24)
+	stmt_list : .  (15)
+
+	.  reduce 15
+
+	stmt_list  goto 182
+
+
+state 181
+	stmt : IF expr COLON stmt_list ENDIF otherwiseif_list OTHERWISE COLON stmt_list ENDOTHERWISE .  (10)
+
+	.  reduce 10
+
+
+state 182
+	stmt_list : stmt_list . stmt  (16)
+	otherwiseif_stmt : OTHERWISEIF expr COLON stmt_list . ENDOTHERWISEIF  (24)
+
+	LPAREN  shift 32
+	LBRACE  shift 33
+	MINUS  shift 34
+	NOT  shift 35
+	DISPLAY  shift 36
+	OUTPUT  shift 37
+	IF  shift 38
+	ENDOTHERWISEIF  shift 183
+	FOR  shift 39
+	REPEAT  shift 40
+	INT  shift 10
+	BOOL  shift 11
+	FLOAT  shift 12
+	CHAR  shift 13
+	RECT  shift 14
+	CIRC  shift 15
+	TRI  shift 16
+	SQRE  shift 17
+	ELPS  shift 18
+	POLY  shift 19
+	POINT  shift 20
+	LINE  shift 21
+	LBRACKET  shift 41
+	OBJECT  shift 43
+	ID  shift 44
+	INT_LITERAL  shift 45
+	STRING_LITERAL  shift 46
+	BOOL_LITERAL  shift 47
+	FLOAT_LITERAL  shift 48
+	.  error
+
+	typ  goto 49
+	stmt  goto 50
+	expr  goto 51
+	literal  goto 52
+	arith_op  goto 53
+	bool_op  goto 54
+	list_op  goto 55
+	html_op  goto 56
+	obj_op  goto 57
+
+
+state 183
+	otherwiseif_stmt : OTHERWISEIF expr COLON stmt_list ENDOTHERWISEIF .  (24)
+
+	.  reduce 24
+
+
+74 terminals, 26 nonterminals
+92 grammar rules, 184 states
