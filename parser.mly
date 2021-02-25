@@ -83,7 +83,7 @@ expr:
 	  literal {$1}
 	| arith_op {$1}
 	| bool_op {$1}
-	| LBRACKET pseudo_list RBRACKET {ListDecl(List.rev $2)}
+	| LBRACKET qweb_list RBRACKET {ListDecl(List.rev $2)}
 	| list_op {$1}
 	| html_op {$1}
 	| obj_op {$1}
@@ -111,10 +111,10 @@ bool_op:
 	| expr AND expr {Binop($1, And, $3)}
 	| expr OR expr	{Binop($1, Or, $3)}
 
-pseudo_list:
+qweb_list:
 	  /* nothing */ { [] }
 	| expr { [$1] }
-	| pseudo_list COMMA expr { $3 :: $1 }
+	| qweb_list COMMA expr { $3 :: $1 }
 
 dict: 
 	  /* nothing */ { [] }
@@ -167,13 +167,12 @@ typ:
   | CHAR  { Char  }
 	| RECT  { Rect  }
 	| CIRC  { Circ  }
-	| TRIANGLE  { Triangle  }
-	| SQUARE  { Square  }
-	| ELLIPSE  { Ellipse  }
+	| TRI  { Tri  }
+	| SQRE  { Sqre  }
+	| ELPS  { Elps  }
 	| POLY  { Poly  }
 	| POINT  { Point  }
 	| LINE  { Line  }
-	| DATE  { Date  }
 
 literal:
 	| INT_LITERAL 		{Int_lit($1)}
