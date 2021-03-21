@@ -83,12 +83,12 @@ expr:
 	  literal {$1}
 	| arith_op {$1}
 	| bool_op {$1}
-	| LBRACKET qweb_list RBRACKET {ListDecl(List.rev $2)}
+	| LBRACKET pseudo_list RBRACKET {ListDecl(List.rev $2)}
 	| list_op {$1}
 	| html_op {$1}
 	| obj_op {$1}
 	| typ ID {Id($1)}
-	| ID ASSIGN expr {Assign($1, $3)}
+	| SET ID ASSIGN expr {Assign($1, $3)}
 	| LPAREN expr RPAREN {$2}
 	| LBRACE dict RBRACE {DictDecl(List.rev $2)}
 	| ID LPAREN actuals_opt RPAREN {Call($1, $3)}
@@ -111,10 +111,10 @@ bool_op:
 	| expr AND expr {Binop($1, And, $3)}
 	| expr OR expr	{Binop($1, Or, $3)}
 
-qweb_list:
+pseudo_list:
 	  /* nothing */ { [] }
 	| expr { [$1] }
-	| qweb_list COMMA expr { $3 :: $1 }
+	| pseudo_list COMMA expr { $3 :: $1 }
 
 dict: 
 	  /* nothing */ { [] }
@@ -161,21 +161,23 @@ formal_list:
 	| formal_list COMMA typ ID {$3 :: $1}
 
 typ:
-    INT   { Int   }
-  | BOOL  { Bool  }
-  | FLOAT { Float }
-  | CHAR  { Char  }
-	| RECT  { Rect  }
-	| CIRC  { Circ  }
-	| TRI  { Tri  }
-	| SQRE  { Sqre  }
-	| ELPS  { Elps  }
-	| POLY  { Poly  }
-	| POINT  { Point  }
-	| LINE  { Line  }
+    INT    { Int   }
+  | BOOL   { Bool  }
+  | FLOAT  { Float }
+  | CHAR   { Char  }
+  | RECT   { Rect  }
+  | CIRC   { Circ  }
+  | TRI    { Tri  }
+  | SQRE   { Sqre  }
+  | ELPS   { Elps  }
+  | POLY   { Poly  }
+  | POINT  { Point  }
+  | LINE   { Line  }
+  | DATE   { Date  }
 
 literal:
-	| INT_LITERAL 		{Int_lit($1)}
-	| STRING_LITERAL	{String_lit($1)}
-	| BOOL_LITERAL		{Bool_lit($1)}
+  | INT_LITERAL 		{Int_lit($1)}
+  | STRING_LITERAL		{String_lit($1)}
+  | BOOL_LITERAL		{Bool_lit($1)}
   | FLOAT_LITERAL		{Float_lit($1)}
+  
