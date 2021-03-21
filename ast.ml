@@ -29,6 +29,7 @@ type stmt =
   | REPEAT of expr * stmt
 
 type func_decl = {
+    typ : typ;
     fname : string;
     formals : bind list;
     locals : bind list;
@@ -74,8 +75,8 @@ let rec string_of_expr = function
 let rec string_of_stmt = function
     Block(stmts) ->
       "{\n" ^ String.concat "" (List.map string_of_stmt stmts) ^ "}\n"
-  | Expr(expr) -> string_of_expr expr ^ ";\n";
-  | Output(expr) -> "output " ^ string_of_expr expr ^ ";\n";
+  | Expr(expr) -> string_of_expr expr ^ "\n";
+  | Output(expr) -> "output " ^ string_of_expr expr ^ "\n";
   | IF(e, s, Block([])) -> "IF (" ^ string_of_expr e ^ ")\n" ^ string_of_stmt s
   | IF(e, s1, s2) ->  "IF (" ^ string_of_expr e ^ ")\n" ^
       string_of_stmt s1 ^ "OTHERWISE\n" ^ string_of_stmt s2
@@ -90,20 +91,21 @@ let string_of_typ = function
   | Float -> "float"
   | Char -> "char"
   | Str -> "str"
-	| Rect -> "rect"
-	| Circ -> "circ"
-	| Tri -> "tri"
-	| Sqre -> "sqre"
-	| Elps -> "elps"
-	| Poly -> "poly"
-	| Point -> "point"
-	| Line -> "line"
-	| Date -> "date"
+  | Rect -> "rect"
+  | Circ -> "circ"
+  | Tri -> "tri"
+  | Sqre -> "sqre"
+  | Elps -> "elps"
+  | Poly -> "poly"
+  | Point -> "point"
+  | Line -> "line"
+  | Date -> "date"
 
-let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ ";\n"
+let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ "\n"
 
 let string_of_fdecl fdecl =
-  "function " ^ fdecl.fname ^ "(" ^ String.concat ", " (List.map snd fdecl.formals) ^
+  string_of_typ fdecl.typ ^ " " ^
+  fdecl.fname ^ "(" ^ String.concat ", " (List.map snd fdecl.formals) ^
   ")\n{\n" ^
   String.concat "" (List.map string_of_vdecl fdecl.locals) ^
   String.concat "" (List.map string_of_stmt fdecl.body) ^
