@@ -32,16 +32,7 @@ let translate (globals, functions) =
   and i1_t       = L.i1_type     context
   and float_t    = L.double_type context
   and char_t     = L.i8_type     context
-  and str_t   	 = L.pointer_type   i8_t
-  and rect_t     = L.xxxx           xxxx
-  and circ_t	 = L.xxxx			xxxx
-  and tri_t		 = L.xxxx			xxxx
-  and sqre_t	 = L.xxxx			xxxx
-  and elps_t	 = L.xxxx			xxxx
-  and poly_t	 = L.xxxx			xxxx
-  and point_t 	 = L.xxxx			xxxx
-  and line_t	 = L.xxxx			xxxx
-  and date_t 	 = L.xxxx			xxxx in
+  and str_t   	 = L.pointer_type   i8_t in
 
   (* Return the LLVM type for a MicroC type *)
   let ltype_of_typ = function
@@ -50,15 +41,6 @@ let translate (globals, functions) =
     | A.Float -> float_t
     | A.Char -> char_t
     | A.Str -> str_t
-    | A.Rect -> rect_t
-    | A.Circ -> circ_t
-    | A.Tri -> tri_t
-    | A.Sqre -> sqre_t
-    | A.Elps -> elps_t
-    | A.Poly -> poly_t
-    | A.Point -> point_t
-    | A.Line -> line_t
-    | A.Date -> date_t
   in
 
   (* Create a map of global variables after creating each *)
