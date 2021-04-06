@@ -1,15 +1,10 @@
 (* Code generation: translate takes a semantically checked AST and
 produces LLVM IR
-
 LLVM tutorial: Make sure to read the OCaml version of the tutorial
-
 http://llvm.org/docs/tutorial/index.html
-
 Detailed documentation on the OCaml LLVM library:
-
 http://llvm.moe/
 http://llvm.moe/ocaml/
-
 *)
 
 module L = Llvm
@@ -79,7 +74,8 @@ let translate (globals, functions) =
     let builder = L.builder_at_end context (L.entry_block the_function) in
 
     let int_format_str = L.build_global_stringptr "%d\n" "fmt" builder
-    and float_format_str = L.build_global_stringptr "%g\n" "fmt" builder in
+    and float_format_str = L.build_global_stringptr "%g\n" "fmt" builder 
+    and str_format_str = L.build_global_stringptr "%g\n" "fmt" builder in
 
     (* Construct the function's "locals": formal arguments and locally
        declared variables.  Allocate each on the stack, initialize their
@@ -125,6 +121,9 @@ let translate (globals, functions) =
 	  L.build_call printbig_func [| (expr builder e) |] "printbig" builder
       | SCall ("printf", [e]) -> 
 	  L.build_call printf_func [| float_format_str ; (expr builder e) |]
+	    "printf" builder
+      | SCall ("prints", [e]) ->
+      	  L.build_call printf_func [| str_format_str ; (expr builder e) |]
 	    "printf" builder
       | SCall (f, args) ->
          let (fdef, fdecl) = StringMap.find f function_decls in
