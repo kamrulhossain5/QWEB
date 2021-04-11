@@ -5,7 +5,7 @@ type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq |
 
 type uop = Neg | Not
 
-type typ = Int | Bool | Char | Float | Str | Rect | Circ | Tri | Sqre | Elps | Poly | Point | Line | Date
+type typ = Int | Bool | Char | Float | Str | Void (*| Rect | Circ | Tri | Sqre | Elps | Poly | Point | Line | Date*)
 
 type bind = typ * string
 
@@ -26,7 +26,8 @@ type stmt =
   | Output of expr
   | IF of expr * stmt * stmt
   | FOR of expr * expr * expr * stmt
-  | REPEAT of expr * stmt
+  (*| REPEAT of expr * stmt*)
+  | WHILE of expr * stmt
 
 type func_decl = {
     typ : typ;
@@ -83,23 +84,25 @@ let rec string_of_stmt = function
   | FOR(e1, e2, e3, s) ->
       "FOR each " ^ string_of_expr e1  ^ " in " ^ string_of_expr e2 ^ " END FOR " ^
       string_of_expr e3  ^ ") " ^ string_of_stmt s
-  | REPEAT(e, s) -> "REPEAT until " ^ string_of_expr e ^ string_of_stmt s ^ " END REPEAT "
+  (*| REPEAT(e, s) -> "REPEAT until " ^ string_of_expr e ^ string_of_stmt s ^ " END REPEAT "*)
+  | WHILE(e, s) -> "while (" ^ string_of_expr e ^ ") " ^ string_of_stmt s
 
 let string_of_typ = function
     Int -> "int"
   | Bool -> "bool"
   | Float -> "float"
   | Char -> "char"
-  | Str -> "str"
-  | Rect -> "rect"
-  | Circ -> "circ"
-  | Tri -> "tri"
-  | Sqre -> "sqre"
-  | Elps -> "elps"
-  | Poly -> "poly"
-  | Point -> "point"
-  | Line -> "line"
-  | Date -> "date"
+  | Str -> "str" 
+  | Void -> "void" (*
+	| Rect -> "rect"
+	| Circ -> "circ"
+	| Tri -> "tri"
+	| Sqre -> "sqre"
+	| Elps -> "elps"
+	| Poly -> "poly"
+	| Point -> "point"
+	| Line -> "line"
+	| Date -> "date" *)
 
 let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ "\n"
 
