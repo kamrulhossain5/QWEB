@@ -19,7 +19,7 @@ type sstmt =
   | SExpr of sexpr
   | SOutput of sexpr
   | SIF of sexpr * sstmt * sstmt
-  | SFOR of sexpr * sexpr * sexpr * sstmt
+  | SFOR of sexpr * sexpr * sstmt
   (*| SREPEAT of sexpr * sstmt*)
   | SWHILE of sexpr * sstmt
 
@@ -60,9 +60,8 @@ let rec string_of_sstmt = function
       "IF (" ^ string_of_sexpr e ^ ")\n" ^ string_of_sstmt s
   | SIF(e, s1, s2) ->  "IF (" ^ string_of_sexpr e ^ ")\n" ^
       string_of_sstmt s1 ^ "OTHERWISE\n" ^ string_of_sstmt s2
-  | SFOR(e1, e2, e3, s) ->
-      "FOR each (" ^ string_of_sexpr e1  ^ " in " ^ string_of_sexpr e2 ^ " END FOR " ^
-      string_of_sexpr e3  ^ ") " ^ string_of_sstmt s
+  | SFOR(e1, e2, s) ->
+      "FOR each " ^ string_of_sexpr e1  ^ " in " ^ string_of_sexpr e2 ^ " END FOR " ^ string_of_sstmt s
   (*| SREPEAT(e, s) -> "REPEAT until " ^ string_of_sexpr e ^ string_of_sstmt s ^ " END REPEAT "*)
   | SWHILE(e, s) -> "WHILE (" ^ string_of_sexpr e ^ ") " ^ string_of_sstmt s ^ " END WHILE "
 
