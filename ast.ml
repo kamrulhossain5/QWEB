@@ -25,7 +25,7 @@ type stmt =
   | Expr of expr
   | Output of expr
   | IF of expr * stmt * stmt
-  | FOR of expr * expr * expr * stmt
+  | FOR of expr * expr * stmt
   (*| REPEAT of expr * stmt*)
   | WHILE of expr * stmt
 
@@ -81,9 +81,8 @@ let rec string_of_stmt = function
   | IF(e, s, Block([])) -> "IF (" ^ string_of_expr e ^ ")\n" ^ string_of_stmt s
   | IF(e, s1, s2) ->  "IF (" ^ string_of_expr e ^ ")\n" ^
       string_of_stmt s1 ^ "OTHERWISE\n" ^ string_of_stmt s2
-  | FOR(e1, e2, e3, s) ->
-      "FOR each " ^ string_of_expr e1  ^ " in " ^ string_of_expr e2 ^ " END FOR " ^
-      string_of_expr e3  ^ ") " ^ string_of_stmt s
+  | FOR(e1, e2, s) ->
+      "FOR each " ^ string_of_expr e1  ^ " in " ^ string_of_expr e2 ^ " END FOR " ^ string_of_stmt s
   (*| REPEAT(e, s) -> "REPEAT until " ^ string_of_expr e ^ string_of_stmt s ^ " END REPEAT "*)
   | WHILE(e, s) -> "while (" ^ string_of_expr e ^ ") " ^ string_of_stmt s
 
