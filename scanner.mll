@@ -45,6 +45,7 @@ rule token = parse
 | "end otherwise if"   { ENDOTHERWISEIF }
 | "output" { OUTPUT }
 | "display"  { DISPLAY }
+| "to"     { TO }
 | "in"     { IN }
 | "continue" { CONTINUE }
 | "pass"  { PASS }
@@ -52,6 +53,7 @@ rule token = parse
 | "end for"    { ENDFOR }
 | "REPEAT until"  { REPEAT }
 | "END REPEAT"  { ENDREPEAT }
+| "While"  { WHILE }
 
 (* DATA TYPES *)
 | "int"    { INT }
@@ -59,7 +61,7 @@ rule token = parse
 | "str"   { STR }
 | "float"  { FLOAT }
 | "char"  { CHAR }
-(* | "color"    { COLOR } *)
+| "color"    { COLOR }
 | "rect"   { RECT }
 | "circ"   { CIRC }
 | "tri"   { TRI }
@@ -69,7 +71,7 @@ rule token = parse
 | "point"  { POINT }
 | "line"  { LINE }
 | "date"  { DATE }
-(* | "void"  { VOID } *)
+| "void"  { VOID }
 
 (* LIST KEYWORDS *)
 | "length" { LENGTH }
