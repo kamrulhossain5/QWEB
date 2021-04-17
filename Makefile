@@ -35,6 +35,10 @@ TESTS = \
 
 TESTFILES = $(TESTS:%=test-%.qwb) $(TESTS:%=test-%.out)
 
-TARFILES = ast.ml Makefile _tags qweb.ml parser.mly \
-	scanner.mll testall.sh \
-	$(TESTFILES:%=tests/%) 
+TARFILES = ast.ml sast.ml codegen.ml Makefile _tags qweb.ml qwebparse.mly \
+	scanner.mll semant.ml testall.sh \
+	$(TESTFILES:%=tests/%)
+
+qweb.tar.gz : $(TARFILES)
+	cd .. && tar czf qweb/qweb.tar.gz \
+		$(TARFILES:%=qweb/%)
