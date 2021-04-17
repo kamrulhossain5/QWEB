@@ -111,6 +111,38 @@ Check() {
     fi
 }
 
+CheckFail() {
+    error=0
+    basename=`echo $1 | sed 's/.*\\///
+                             s/.qwb//'`
+    reffile=`echo $1 | sed 's/.qwb$//'`
+    basedir="`echo $1 | sed 's/\/[^\/]*$//'`/."
+
+    echo -n "$basename..."
+
+    echo 1>&2
+    echo "###### Testing $basename" 1>&2
+
+    generatedfiles=""
+
+    generatedfiles="$generatedfiles ${basename}.err ${basename}.diff" &&
+    RunFail "$QWEB" "<" $1 "2>" "${basename}.err" ">>" $globallog &&
+    Compare ${basename}.err ${reffile}.err ${basename}.diff
+
+    # Report the status and clean up the generated files
+
+    if [ $error -eq 0 ] ; then
+	if [ $keep -eq 0 ] ; then
+	    rm -f $generatedfiles
+	fi
+	echo "OK"
+	echo "###### SUCCESS" 1>&2
+    else
+	echo "###### FAILED" 1>&2
+	globalerror=$error
+    fi
+}
+
 while getopts kdpsh c; do
     case $c in
 	k) # Keep intermediate files
@@ -144,6 +176,13 @@ do
     case $file in
 	*test-*)
 	    Check $file 2>> $globallog
+	    ;;
+	*fail-*)
+	    CheckFail $file 2>> $globallog
+	    ;;
+	*)
+	    echo "unknown file type $file"
+	    globalerror=1
 	    ;;
     esac
 done
