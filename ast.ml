@@ -13,6 +13,7 @@ type expr =
     Literal of int
   | Fliteral of string
   | BoolLit of bool
+  | Sliteral of string
   | Id of string
   | Binop of expr * op * expr
   | Unop of uop * expr
@@ -24,6 +25,7 @@ type stmt =
     Block of stmt list
   | Expr of expr
   | Output of expr
+  | Return of expr
   | IF of expr * stmt * stmt
   | FOR of expr * expr * stmt
   (*| REPEAT of expr * stmt*)
@@ -62,6 +64,7 @@ let string_of_uop = function
 let rec string_of_expr = function
     Literal(l) -> string_of_int l
   | Fliteral(l) -> l
+  | Sliteral(l) -> l
   | BoolLit(true) -> "true"
   | BoolLit(false) -> "false"
   | Id(s) -> s
@@ -77,6 +80,7 @@ let rec string_of_stmt = function
     Block(stmts) ->
       "{\n" ^ String.concat "" (List.map string_of_stmt stmts) ^ "}\n"
   | Expr(expr) -> string_of_expr expr ^ "\n";
+  | Return(expr) -> "return " ^ string_of_expr expr ^ ";\n";
   | Output(expr) -> "output " ^ string_of_expr expr ^ "\n";
   | IF(e, s, Block([])) -> "IF (" ^ string_of_expr e ^ ")\n" ^ string_of_stmt s
   | IF(e, s1, s2) ->  "IF (" ^ string_of_expr e ^ ")\n" ^
