@@ -6,6 +6,7 @@ type sexpr = typ * sx
 and sx =
     SLiteral of int
   | SFliteral of string
+  | SSliteral of string
   | SBoolLit of bool
   | SId of string
   | SBinop of sexpr * op * sexpr
@@ -18,6 +19,7 @@ type sstmt =
     SBlock of sstmt list
   | SExpr of sexpr
   | SOutput of sexpr
+  | SReturn of sexpr
   | SIF of sexpr * sstmt * sstmt
   | SFOR of sexpr * sexpr * sstmt
   (*| SREPEAT of sexpr * sstmt*)
@@ -41,6 +43,7 @@ let rec string_of_sexpr (t, e) =
   | SBoolLit(true) -> "true"
   | SBoolLit(false) -> "false"
   | SFliteral(l) -> l
+  | SSliteral(l) -> l
   | SId(s) -> s
   | SBinop(e1, o, e2) ->
       string_of_sexpr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_sexpr e2
@@ -55,6 +58,7 @@ let rec string_of_sstmt = function
     SBlock(stmts) ->
       "{\n" ^ String.concat "" (List.map string_of_sstmt stmts) ^ "}\n"
   | SExpr(expr) -> string_of_sexpr expr ^ "\n";
+  | SReturn(expr) -> "return " ^ string_of_sexpr expr ^ ";\n";
   | SOutput(expr) -> "output " ^ string_of_sexpr expr ^ "\n";
   | SIF(e, s, SBlock([])) ->
       "IF (" ^ string_of_sexpr e ^ ")\n" ^ string_of_sstmt s
