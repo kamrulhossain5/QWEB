@@ -1,3 +1,5 @@
-main{
-    prints("Hello World")
+int main()
+{
+  prints("Hello World");
+  return 0;
 }
