@@ -8,7 +8,7 @@ open Ast
 %token PLUS MINUS TIMES DIVIDE ASSIGN NOT
 %token EQ NEQ LT LEQ GT GEQ
 %token AND OR IN
-%token DISPLAY OUTPUT IF ENDIF OTHERWISE ENDOTHERWISE OTHERWISEIF ENDOTHERWISEIF FOR ENDFOR REPEAT ENDREPEAT IN SET CONTINUE PASS TO WHILE
+%token RETURN DISPLAY OUTPUT IF ENDIF OTHERWISE ENDOTHERWISE OTHERWISEIF ENDOTHERWISEIF FOR ENDFOR REPEAT ENDREPEAT IN SET CONTINUE PASS TO WHILE
 %token INT BOOL STR FLOAT CHAR VOID RECT CIRC TRI SQRE ELPS POLY POINT LINE DATE COLOR
 %token LBRACKET RBRACKET COLON DOT END
 %token LENGTH APPEND REMOVE
@@ -55,17 +55,17 @@ fdecl:
 	 locals = List.rev $7;
 	 body = List.rev $8 } }
 
-/*formals_opt:*/
-    /* nothing */ /*{ [] }*/
-  /*| formal_list   { $1 }*/
+formals_opt:
+    /* nothing */ { [] }
+  | formal_list   { $1 }
 
-/*formal_list:
+formal_list:
     typ ID                   { [($1,$2)]     }
-  | formal_list COMMA typ ID { ($3,$4) :: $1 }*/
+  | formal_list COMMA typ ID { ($3,$4) :: $1 }
 
-/*vdecl_list:*/
-    /* nothing */    /*{ [] }*/
-  /*| vdecl_list vdecl { $2 :: $1 }*/
+vdecl_list:
+    /* nothing */    { [] }
+  | vdecl_list vdecl { $2 :: $1 }
 
 vdecl:
    typ ID SEMI { ($1, $2) }
@@ -80,6 +80,8 @@ vdecl:
 
 stmt:
 	  expr END {Expr $1}
+	| LBRACE stmt_list RBRACE                 { Block(List.rev $2)    }
+	| RETURN expr_opt SEMI                    { Return $2             }
 	/*| REPEAT expr COLON loop_stmt_list ENDREPEAT {Repeat($2, Block(List.rev $4))}*/
 	/*| FOR ID IN expr COLON loop_stmt_list ENDFOR {For(Id($2), $4, Block(List.rev $6))}
 	| IF expr COLON stmt_list ENDIF otherwiseif_list {If($2, Block(List.rev $4), Block([]))}
@@ -109,11 +111,18 @@ loop_stmt:
 /*otherwiseif_stmt:
 	| OTHERWISEIF expr COLON stmt_list ENDOTHERWISEIF {If($2, Block(List.rev $4), Block([]))}*/
 
+expr_opt:
+    /* nothing */ { Noexpr }
+  | expr          { $1 }
+
 expr:
-	  LITERAL { Literal($1) }
+	  LITERAL 			 { Literal($1) }
 	| FLOAT_LITERAL	     { Fliteral($1) }
 	| BOOL_LITERAL       { BoolLit($1)  }
-	| ID         { Id($1) }
+	| STRING_LITERAL	 { Sliteral($1) }
+	| ID         		 { Id($1) }
+	| LPAREN expr RPAREN { $2                   }
+	| ID LPAREN args_opt RPAREN { Call($1, $3)  }
 	/*| arith_op {$1}
 	| bool_op {$1}
 	| LBRACKET pseudo_list RBRACKET {ListDecl(List.rev $2)}
@@ -197,8 +206,8 @@ typ:
     INT    { Int   }
   | BOOL   { Bool  }
   | FLOAT  { Float }
-  | CHAR   { Char  }
   | VOID   { Void  } /*
+  | CHAR   { Char  }
   | RECT   { Rect  }
   | CIRC   { Circ  }
   | TRI    { Tri  }
@@ -214,3 +223,11 @@ typ:
   | STRING_LITERAL		{String_lit($1)}
   | BOOL_LITERAL		{Bool_lit($1)}
   | FLOAT_LITERAL		{Float_lit($1)}*/
+
+args_opt:
+    /* nothing */ { [] }
+  | args_list  { List.rev $1 }
+
+args_list:
+    expr                    { [$1] }
+  | args_list COMMA expr { $3 :: $1 }
