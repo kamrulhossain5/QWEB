@@ -32,7 +32,7 @@ let translate (globals, functions) =
   and i1_t       = L.i1_type     context
   and float_t    = L.double_type context
   and char_t     = L.i8_type     context
-  and str_t   	 = L.i8_type     context
+  and str_t   	 = L.pointer_type (L.i8_type context)
   and void_t     = L.void_type   context in
 
   (* Return the LLVM type for a QWEB type *)
@@ -58,6 +58,11 @@ let translate (globals, functions) =
       L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
   let printf_func : L.llvalue = 
       L.declare_function "printf" printf_t the_module in
+
+  let prints_t : L.lltype = 
+      L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
+  let prints_func : L.llvalue = 
+      L.declare_function "prints" prints_t the_module in
 
   let printbig_t : L.lltype =
       L.function_type i32_t [| i32_t |] in
@@ -114,9 +119,10 @@ let translate (globals, functions) =
 
     (* Construct code for an expression; return its value *)
     let rec expr builder ((_, e) : sexpr) = match e with
-	SLiteral i  -> L.const_int i32_t i
+	      SLiteral i  -> L.const_int i32_t i
       | SBoolLit b  -> L.const_int i1_t (if b then 1 else 0)
       | SFliteral l -> L.const_float_of_string float_t l
+      | SSliteral i -> L.build_global_stringptr i "string" builder
       | SNoexpr     -> L.const_int i32_t 0
       | SId s       -> L.build_load (lookup s) s builder
       | SAssign (s, e) -> let e' = expr builder e in
@@ -145,7 +151,7 @@ let translate (globals, functions) =
 	    A.Add     -> L.build_add
 	  | A.Sub     -> L.build_sub
 	  | A.Mult    -> L.build_mul
-          | A.Div     -> L.build_sdiv
+    | A.Div     -> L.build_sdiv
 	  | A.And     -> L.build_and
 	  | A.Or      -> L.build_or
 	  | A.Equal   -> L.build_icmp L.Icmp.Eq
@@ -167,8 +173,8 @@ let translate (globals, functions) =
       | SCall ("printbig", [e]) ->
 	  L.build_call printbig_func [| (expr builder e) |] "printbig" builder
       | SCall ("prints", [e]) ->
-    L.build_call printf_func [| str_format_str ; (expr builder e) |]
-      "printf" builder
+    L.build_call prints_func [| str_format_str ; (expr builder e) |]
+      "prints" builder
       | SCall ("printf", [e]) -> 
 	  L.build_call printf_func [| float_format_str ; (expr builder e) |]
 	    "printf" builder
@@ -197,6 +203,12 @@ let translate (globals, functions) =
     let rec stmt builder = function
 	SBlock sl -> List.fold_left stmt builder sl
       | SExpr e -> ignore(expr builder e); builder 
+      | SReturn e -> ignore(match fdecl.styp with
+                              (* Special "return nothing" instr *)
+                              A.Void -> L.build_ret_void builder 
+                              (* Build return statement *)
+                            | _ -> L.build_ret (expr builder e) builder );
+                     builder
       | SOutput e -> ignore(match fdecl.styp with
                               (* Special "return nothing" instr *)
                               A.Void -> L.build_ret_void builder 
