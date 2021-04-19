@@ -12,6 +12,7 @@ open Ast
 %token INT BOOL STR FLOAT CHAR VOID RECT CIRC TRI SQRE ELPS POLY POINT LINE DATE COLOR
 %token LBRACKET RBRACKET COLON DOT END
 %token LENGTH APPEND REMOVE
+%token PRINT
 %token CREATEHEADER CREATEPARAGRAPH CREATETABLE CREATEUNORDEREDLIST 
 %token OBJECT
 %token <string> ID
@@ -40,7 +41,7 @@ open Ast
 
 program:
 	decls EOF { $1 }
-	/*func_decl_list EOF { List.rev $1 }*/
+	/*| func_decl_list EOF { List.rev $1 }*/
 
 decls:
    /* nothing */ { ([], [])               }
@@ -70,16 +71,18 @@ vdecl_list:
 vdecl:
    typ ID SEMI { ($1, $2) }
 
-/*func_decl_list:*/
-	/* nothing */ /*{ [] }*/
-	/*| func_decl_list func_decl {$2 :: $1}*/
+/*
+func_decl_list:
+	  /* nothing */ /*{ [] }*/
+	/*| func_decl_list fdecl {$2 :: $1}*/
 
 /*obj_list:
 	 typ ID { [$1] }
 	| obj_list COMMA ID {$3 :: $1}*/
 
 stmt:
-	  expr END {Expr $1}
+	  /*expr END {Expr $1}*/
+      expr SEMI                               { Expr $1               }
 	| LBRACE stmt_list RBRACE                 { Block(List.rev $2)    }
 	| RETURN expr_opt SEMI                    { Return $2             }
 	/*| REPEAT expr COLON loop_stmt_list ENDREPEAT {Repeat($2, Block(List.rev $4))}*/
@@ -131,9 +134,7 @@ expr:
 	| obj_op {$1}
 	| typ ID {Id($1)}
 	| SET ID ASSIGN expr {Assign($2, $4)}
-	| LPAREN expr RPAREN {$2}
-	| LBRACE dict RBRACE {DictDecl(List.rev $2)}
-	| ID LPAREN actuals_opt RPAREN {Call($1, $3)}*/
+	| LBRACE dict RBRACE {DictDecl(List.rev $2)}*/
 
 /*arith_op:
 	  MINUS expr		{Unop(Neg, $2)}
@@ -178,14 +179,17 @@ obj_op:
     | expr DOT ID {ObjectField($1, $3)}
     | expr DOT ID ASSIGN expr {ObjectAssign($1, $3, $5)}*/
 
-/*func_decl:
+/*
+func_decl:
 	  FUNCTION ID LPAREN formal_opt RPAREN COLON stmt_list END
 	  	{ {
+			typ = $1;
 	  		fname = $2;
 	  		formals = $4;
-	  		body = List.rev $7
-	  	} }*/
-
+			locals = List.rev $7;
+	  		body = List.rev $8
+	  	} }
+*/
 /*actuals_opt:*/
 	  /* nothing */ /*{ [] }*/
 	/*| actuals_list { List.rev $1 }*/
@@ -194,7 +198,8 @@ obj_op:
       expr                    { [$1] }
   	| actuals_list COMMA expr { $3 :: $1 }*/
 
-/*formal_opt:*/
+/*
+formal_opt:*/
 	  /* nothing */ /*{ [] }*/
 	/*| formal_list { List.rev $1 }*/
 
@@ -206,7 +211,8 @@ typ:
     INT    { Int   }
   | BOOL   { Bool  }
   | FLOAT  { Float }
-  | VOID   { Void  } /*
+  | VOID   { Void  }
+  | STR    { Str   } /*
   | CHAR   { Char  }
   | RECT   { Rect  }
   | CIRC   { Circ  }
