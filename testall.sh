@@ -91,7 +91,7 @@ Check() {
 
     generatedfiles=""
 
-    generatedfiles="$generatedfiles ${basename}.ll ${basename}.s ${basename}.exe ${basename}.out" &&
+    generatedfiles="$generatedfiles tests/${basename}.ll ${basename}.s ${basename}.exe ${basename}.out" &&
     Run "$QWEB" "$1" ">" "${basename}.ll" &&
     Run "$LLC" "-relocation-model=pic" "${basename}.ll" ">" "${basename}.s" &&
     Run "./${basename}.exe" > "${basename}.out" &&
