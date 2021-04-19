@@ -54,15 +54,15 @@ let translate (globals, functions) =
       in StringMap.add n (L.define_global n init the_module) m in
     List.fold_left global_var StringMap.empty globals in
 
+  (*let printf_t : L.lltype = 
+      L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
+  let printf_func : L.llvalue = 
+      L.declare_function "printf" printf_t the_module in*)
+
   let printf_t : L.lltype = 
       L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
   let printf_func : L.llvalue = 
-      L.declare_function "printf" printf_t the_module in
-
-  let prints_t : L.lltype = 
-      L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
-  let prints_func : L.llvalue = 
-      L.declare_function "prints" prints_t the_module in
+      L.declare_function "prints" printf_t the_module in
 
   let printbig_t : L.lltype =
       L.function_type i32_t [| i32_t |] in
@@ -173,7 +173,7 @@ let translate (globals, functions) =
       | SCall ("printbig", [e]) ->
 	  L.build_call printbig_func [| (expr builder e) |] "printbig" builder
       | SCall ("prints", [e]) ->
-    L.build_call prints_func [| str_format_str ; (expr builder e) |]
+    L.build_call printf_func [| str_format_str ; (expr builder e) |]
       "prints" builder
       | SCall ("printf", [e]) -> 
 	  L.build_call printf_func [| float_format_str ; (expr builder e) |]
