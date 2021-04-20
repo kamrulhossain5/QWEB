@@ -95,6 +95,7 @@ let check (globals, functions) =
     let rec expr = function
         Literal  l -> (Int, SLiteral l)
       | Fliteral l -> (Float, SFliteral l)
+      | Sliteral l -> (Str, SSliteral l)
       | BoolLit l  -> (Bool, SBoolLit l)
       | Noexpr     -> (Void, SNoexpr)
       | Id s       -> (type_of_identifier s, SId s)
@@ -157,9 +158,14 @@ let check (globals, functions) =
     let rec check_stmt = function
         Expr e -> SExpr (expr e)
       | IF(p, b1, b2) -> SIF(check_bool_expr p, check_stmt b1, check_stmt b2)
-      | FOR(e1, e2, e3, st) ->
-	  SFOR(expr e1, check_bool_expr e2, expr e3, check_stmt st)
+      | FOR(e1, e2, st) ->
+	  SFOR(expr e1, check_bool_expr e2, check_stmt st)
       | WHILE(p, s) -> SWHILE(check_bool_expr p, check_stmt s)
+      | Return e -> let (t, e') = expr e in
+        if t = func.typ then SReturn (t, e') 
+        else raise (
+	  Failure ("return gives " ^ string_of_typ t ^ " expected " ^
+		   string_of_typ func.typ ^ " in " ^ string_of_expr e))
       | Output e -> let (t, e') = expr e in
         if t = func.typ then SOutput (t, e') 
         else raise (
@@ -172,6 +178,8 @@ let check (globals, functions) =
           let rec check_stmt_list = function
               [Output _ as s] -> [check_stmt s]
             | Output _ :: _   -> raise (Failure "nothing may follow a return")
+            | [Return _ as s] -> [check_stmt s]
+            | Return _ :: _   -> raise (Failure "nothing may follow a return")
             | Block sl :: ss  -> check_stmt_list (sl @ ss) (* Flatten blocks *)
             | s :: ss         -> check_stmt s :: check_stmt_list ss
             | []              -> []

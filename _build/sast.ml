@@ -6,6 +6,7 @@ type sexpr = typ * sx
 and sx =
     SLiteral of int
   | SFliteral of string
+  | SSliteral of string
   | SBoolLit of bool
   | SId of string
   | SBinop of sexpr * op * sexpr
@@ -18,8 +19,9 @@ type sstmt =
     SBlock of sstmt list
   | SExpr of sexpr
   | SOutput of sexpr
+  | SReturn of sexpr
   | SIF of sexpr * sstmt * sstmt
-  | SFOR of sexpr * sexpr * sexpr * sstmt
+  | SFOR of sexpr * sexpr * sstmt
   (*| SREPEAT of sexpr * sstmt*)
   | SWHILE of sexpr * sstmt
 
@@ -41,6 +43,7 @@ let rec string_of_sexpr (t, e) =
   | SBoolLit(true) -> "true"
   | SBoolLit(false) -> "false"
   | SFliteral(l) -> l
+  | SSliteral(l) -> l
   | SId(s) -> s
   | SBinop(e1, o, e2) ->
       string_of_sexpr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_sexpr e2
@@ -55,14 +58,14 @@ let rec string_of_sstmt = function
     SBlock(stmts) ->
       "{\n" ^ String.concat "" (List.map string_of_sstmt stmts) ^ "}\n"
   | SExpr(expr) -> string_of_sexpr expr ^ "\n";
+  | SReturn(expr) -> "return " ^ string_of_sexpr expr ^ ";\n";
   | SOutput(expr) -> "output " ^ string_of_sexpr expr ^ "\n";
   | SIF(e, s, SBlock([])) ->
       "IF (" ^ string_of_sexpr e ^ ")\n" ^ string_of_sstmt s
   | SIF(e, s1, s2) ->  "IF (" ^ string_of_sexpr e ^ ")\n" ^
       string_of_sstmt s1 ^ "OTHERWISE\n" ^ string_of_sstmt s2
-  | SFOR(e1, e2, e3, s) ->
-      "FOR each (" ^ string_of_sexpr e1  ^ " in " ^ string_of_sexpr e2 ^ " END FOR " ^
-      string_of_sexpr e3  ^ ") " ^ string_of_sstmt s
+  | SFOR(e1, e2, s) ->
+      "FOR each " ^ string_of_sexpr e1  ^ " in " ^ string_of_sexpr e2 ^ " END FOR " ^ string_of_sstmt s
   (*| SREPEAT(e, s) -> "REPEAT until " ^ string_of_sexpr e ^ string_of_sstmt s ^ " END REPEAT "*)
   | SWHILE(e, s) -> "WHILE (" ^ string_of_sexpr e ^ ") " ^ string_of_sstmt s ^ " END WHILE "
 

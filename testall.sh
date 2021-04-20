@@ -6,11 +6,12 @@
 #  Compile and check the error of each expected-to-fail test
 
 # Path to the LLVM interpreter
-LLI="lli"
-#LLI="/usr/local/opt/llvm/bin/lli"
+# LLI="lli"
+LLI="/usr/local/opt/llvm/bin/lli"
 
 # Path to the LLVM compiler
-LLC="llc"
+# LLC="llc"
+LLC="/usr/local/opt/llvm/bin/llc"
 
 # Path to the C compiler
 CC="cc"
@@ -94,6 +95,7 @@ Check() {
     generatedfiles="$generatedfiles tests/${basename}.ll ${basename}.s ${basename}.exe ${basename}.out" &&
     Run "$QWEB" "$1" ">" "${basename}.ll" &&
     Run "$LLC" "-relocation-model=pic" "${basename}.ll" ">" "${basename}.s" &&
+    Run "$CC" "-o" "${basename}.exe" "${basename}.s" &&
     Run "./${basename}.exe" > "${basename}.out" &&
     Compare ${basename}.out ${reffile}.out ${basename}.diff
 

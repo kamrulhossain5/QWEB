@@ -21,6 +21,7 @@ type token =
   | AND
   | OR
   | IN
+  | RETURN
   | DISPLAY
   | OUTPUT
   | IF
@@ -36,11 +37,14 @@ type token =
   | SET
   | CONTINUE
   | PASS
+  | TO
+  | WHILE
   | INT
   | BOOL
   | STR
   | FLOAT
   | CHAR
+  | VOID
   | RECT
   | CIRC
   | TRI
@@ -50,6 +54,7 @@ type token =
   | POINT
   | LINE
   | DATE
+  | COLOR
   | LBRACKET
   | RBRACKET
   | COLON
@@ -58,6 +63,7 @@ type token =
   | LENGTH
   | APPEND
   | REMOVE
+  | PRINT
   | CREATEHEADER
   | CREATEPARAGRAPH
   | CREATETABLE
@@ -69,7 +75,7 @@ type token =
   | INT_LITERAL of (float)
   | STRING_LITERAL of (string)
   | BOOL_LITERAL of (bool)
-  | FLOAT_LITERAL of (float)
+  | FLOAT_LITERAL of (string)
 
 val program :
   (Lexing.lexbuf  -> token) -> Lexing.lexbuf -> Ast.program
