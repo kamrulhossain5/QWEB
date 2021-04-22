@@ -1,0 +1,7 @@
+function none noneFunc(){
+  }
+
+function int main(){
+  int i;
+  i = noneFunc(); #Fail: assigning a none to an integer
+}

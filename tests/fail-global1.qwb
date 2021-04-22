@@ -1,0 +1,7 @@
+int c;
+bool b;
+none a; #global variables should not be none
+
+function int main(){
+  output 0;
+}

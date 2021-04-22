@@ -1,0 +1,10 @@
+function int main(){
+  int i;
+  REPEAT until (true){
+    i = i + 1;
+  }
+
+  REPEAT until (42){ #Should be boolean
+    i = i + 1;
+  }
+}

@@ -1,0 +1,12 @@
+function none foo(){
+  if (true){ #Should output none
+    output 42;
+  }
+  otherwise{
+    output;
+  }
+}
+
+function int main(){
+  output 42;
+}

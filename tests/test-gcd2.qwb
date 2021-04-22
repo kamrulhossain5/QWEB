@@ -1,0 +1,17 @@
+function int gcd(int a, int b){
+  REPEAT until (a != b){
+    if (a > b){
+      a = a - b;
+    }
+    otherwise{
+      b = b - a;
+    }
+  }
+  output a;
+}
+
+function int main(){
+  print(gcd(14,21));
+  print(gcd(8,36));
+  print(gcd(99,121));
+}

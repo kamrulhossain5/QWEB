@@ -1,0 +1,12 @@
+function int foo(int a, bool b){
+  int c;
+  bool d;
+
+  c = a;
+
+  output c + 10;
+}
+
+function int main(){
+ print(foo(37, false));
+}

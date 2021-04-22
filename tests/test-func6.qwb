@@ -1,0 +1,10 @@
+function none foo(){
+  }
+
+function int bar(int a, bool b, int c){
+ output a + c;
+}
+
+function int main(){
+  print(bar(4, false, 100));
+}

@@ -1,0 +1,3 @@
+function int main(){
+  output true; #Should output int
+}

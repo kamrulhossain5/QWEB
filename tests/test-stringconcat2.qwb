@@ -1,0 +1,8 @@
+function str main(){
+  str a;
+  str b;
+  a = "hello!";
+  b = "hello" + " world! " + a;
+  prints(b);
+  output b;
+}

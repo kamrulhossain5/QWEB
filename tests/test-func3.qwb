@@ -1,0 +1,10 @@
+function none printem(int a, int b, int c, int d){
+  print(a);
+  print(b);
+  print(c);
+  print(d);
+}
+
+function int main(){
+  printem(15,17,192,8);
+}

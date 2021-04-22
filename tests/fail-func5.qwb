@@ -1,0 +1,14 @@
+function int foo(){
+  }
+
+function int bar(){
+  int a;
+  none b; #Error: illegal none local b
+  bool c;
+
+  output 0;
+}
+
+function int main(){
+  output 0;
+}

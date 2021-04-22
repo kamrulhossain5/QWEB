@@ -1,0 +1,15 @@
+function int foo(){
+  }
+
+function none bar(){
+  }
+
+function int print(){ #Should not be able to define print
+  }
+
+function none baz(){
+  }
+
+function int main(){
+  output 0;
+}

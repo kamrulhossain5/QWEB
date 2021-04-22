@@ -1,0 +1,9 @@
+function int main(){
+  int i;
+  i = 0;
+  FOR each ( ; i < 5; ){
+    print(i);
+    i = i + 1;
+  }
+  print(20);
+}

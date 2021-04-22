@@ -1,0 +1,7 @@
+function int add(int x, int y){
+  output x + y;
+}
+
+function int main(){
+  print( add(15, 20) );
+}

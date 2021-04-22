@@ -1,0 +1,13 @@
+function int cond(bool b){
+  int x;
+  if (b)
+    x = 19;
+  otherwise
+    x = 17;
+  output x;
+}
+
+function int main(){
+ print(cond(true));
+ print(cond(false));
+}

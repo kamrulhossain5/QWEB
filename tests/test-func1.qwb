@@ -1,0 +1,9 @@
+function int add(int a, int b){
+  output a + b;
+}
+
+function int main(){
+  int a;
+  a = add(7, 2);
+  print(a);
+}

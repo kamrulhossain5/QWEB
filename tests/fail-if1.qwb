@@ -1,0 +1,10 @@
+function int main(){
+  if (true){
+    }
+  if (false){
+    }
+  otherwise{
+    }
+  if (42){ #Error: non-bool predicate
+    }
+}

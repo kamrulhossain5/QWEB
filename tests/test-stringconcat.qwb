@@ -1,0 +1,10 @@
+function str helloworld(str a, str b){
+  output a + b;
+}
+
+function str main(){
+  str c;
+  c = helloworld("hello", " world");
+  prints(c);
+  output c;
+}

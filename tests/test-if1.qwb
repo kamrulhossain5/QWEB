@@ -1,0 +1,6 @@
+function int main(){
+  if (true){
+    print(19);
+  }
+  print(17);
+}

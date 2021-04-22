@@ -1,0 +1,10 @@
+function none foo(bool i){
+  int i; #Should hide the formal i
+
+  i = 9;
+  print(i + i);
+}
+
+function int main(){
+  foo(true);
+}

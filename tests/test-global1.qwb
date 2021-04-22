@@ -1,0 +1,25 @@
+int a;
+int b;
+
+function none printa(){
+  print(a);
+}
+
+function none printbb(){
+  print(b);
+}
+
+function none incab(){
+  a = a + 1;
+  b = b + 1;
+}
+
+function int main(){
+  a = 30;
+  b = 17;
+  printa();
+  printbb();
+  incab();
+  printa();
+  printbb();
+}

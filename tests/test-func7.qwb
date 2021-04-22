@@ -1,0 +1,10 @@
+int a;
+
+function none foo(int c){
+  a = c + 35;
+}
+
+function int main(){
+  foo(25);
+  print(a);
+}

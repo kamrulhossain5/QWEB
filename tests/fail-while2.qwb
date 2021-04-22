@@ -1,0 +1,10 @@
+function int main(){
+  int i;
+  REPEAT until (true){
+    i = i + 1;
+  }
+
+  REPEAT until (true){
+    foo(); #foo undefined
+  }
+}

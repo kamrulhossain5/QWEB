@@ -10,13 +10,13 @@
 LLI="/usr/local/opt/llvm/bin/lli"
 
 # Path to the LLVM compiler
-# LLC="llc"
+LLC="llc"
 LLC="/usr/local/opt/llvm/bin/llc"
 
 # Path to the C compiler
 CC="cc"
 
-# Path to the qweb compiler.  Usually "./qweb.native"
+# Path to the QWEB compiler.  Usually "./qweb.native"
 # Try "_build/qweb.native" if ocamlbuild was unable to create a symbolic link.
 QWEB="./qweb.native"
 #QWEB="_build/qweb.native"
@@ -92,19 +92,20 @@ Check() {
 
     generatedfiles=""
 
-    generatedfiles="$generatedfiles tests/${basename}.ll ${basename}.s ${basename}.exe ${basename}.out" &&
+    generatedfiles="$generatedfiles ${basename}.ll ${basename}.s ${basename}.exe ${basename}.out ${basename}.html" &&
     Run "$QWEB" "$1" ">" "${basename}.ll" &&
     Run "$LLC" "-relocation-model=pic" "${basename}.ll" ">" "${basename}.s" &&
-    Run "$CC" "-o" "${basename}.exe" "${basename}.s" &&
+    Run "$CC" "-o" "${basename}.exe" "${basename}.s" "functions.o" &&
     Run "./${basename}.exe" > "${basename}.out" &&
+    Run "./${basename}.exe" > "${basename}.html" &&
     Compare ${basename}.out ${reffile}.out ${basename}.diff
 
     # Report the status and clean up the generated files
 
     if [ $error -eq 0 ] ; then
-	if [ $keep -eq 0 ] ; then
-	    rm -f $generatedfiles
-	fi
+	# if [ $keep -eq 0 ] ; then
+	#     rm -f $generatedfiles
+	# fi
 	echo "OK"
 	echo "###### SUCCESS" 1>&2
     else
@@ -166,11 +167,18 @@ LLIFail() {
 
 which "$LLI" >> $globallog || LLIFail
 
+if [ ! -f functions.o ]
+then
+    echo "Could not find functions.o"
+    echo "Try \"make functions.o\""
+    exit 1
+fi
+
 if [ $# -ge 1 ]
 then
     files=$@
 else
-    files="tests/test-*.qwb"
+    files="tests/test-*.qwb tests/fail-*.qwb"
 fi
 
 for file in $files

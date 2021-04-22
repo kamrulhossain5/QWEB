@@ -1,0 +1,15 @@
+function int foo(){
+  }
+
+function int bar(){
+  }
+
+function int baz(){
+  }
+
+function none bar(){ #Error: duplicate function bar
+  }
+
+function int main(){
+  output 0;
+}

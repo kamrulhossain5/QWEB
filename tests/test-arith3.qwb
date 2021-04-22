@@ -1,0 +1,10 @@
+function int foo(int a){
+  output a;
+}
+
+function int main(){
+  int a;
+  a = 50;
+  a = a + 5;
+  print(a);
+}

@@ -1,0 +1,12 @@
+int a;
+bool b;
+
+function none foo(int c, bool d){
+  int d;
+  bool e;
+  b + a; #Error: bool + int
+}
+
+function int main(){
+  output 0;
+}

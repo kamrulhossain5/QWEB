@@ -1,0 +1,9 @@
+function int foo(int a, bool b, int c){
+  }
+
+function none bar(int a, none b, int c){ #Error: illegal none formal b
+  }
+
+function int main(){
+  output 0;
+}

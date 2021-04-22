@@ -1,0 +1,6 @@
+function int main(){
+  int i;
+  FOR each (i = 0; i ; i = i + 1){ # i is an integer, not Boolean
+  }
+  output 0;
+}

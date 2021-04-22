@@ -1,0 +1,7 @@
+function int main(){
+  int i;
+  FOR each (i = 0; i < 10; i = i + 1){
+    foo(); #Error: no function foo
+  }
+  output 0;
+}

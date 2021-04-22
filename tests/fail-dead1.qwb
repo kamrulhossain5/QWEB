@@ -1,0 +1,6 @@
+function int main(){
+  int i;
+  i = 15;
+  output i;
+  i = 32; #Error: code after a output
+}

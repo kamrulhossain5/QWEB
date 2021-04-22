@@ -1,0 +1,7 @@
+function none foo(int a){
+  print(a + 3);
+}
+
+function int main(){
+  foo(40);
+}

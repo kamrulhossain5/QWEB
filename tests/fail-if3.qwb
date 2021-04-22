@@ -1,0 +1,8 @@
+function int main(){
+  if (true){
+    42;
+  }
+  otherwise{
+    bar; #Error: undeclared variable
+  }
+}
