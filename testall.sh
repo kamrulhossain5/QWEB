@@ -95,7 +95,7 @@ Check() {
     generatedfiles="$generatedfiles ${basename}.ll ${basename}.s ${basename}.exe ${basename}.out ${basename}.html" &&
     Run "$QWEB" "$1" ">" "${basename}.ll" &&
     Run "$LLC" "-relocation-model=pic" "${basename}.ll" ">" "${basename}.s" &&
-    Run "$CC" "-o" "${basename}.exe" "${basename}.s" "functions.o" &&
+    Run "$CC" "-o" "${basename}.exe" "${basename}.s" "printbig.o" &&
     Run "./${basename}.exe" > "${basename}.out" &&
     Run "./${basename}.exe" > "${basename}.html" &&
     Compare ${basename}.out ${reffile}.out ${basename}.diff
@@ -167,10 +167,10 @@ LLIFail() {
 
 which "$LLI" >> $globallog || LLIFail
 
-if [ ! -f functions.o ]
+if [ ! -f printbig.o ]
 then
-    echo "Could not find functions.o"
-    echo "Try \"make functions.o\""
+    echo "Could not find printbig.o"
+    echo "Try \"make printbig.o\""
     exit 1
 fi
 

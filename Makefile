@@ -5,14 +5,14 @@ test : all testall.sh
 	./testall.sh
 
 .PHONY : all
-all : qweb.native functions.o
+all : qweb.native printbig.o
 
 qweb.native :
 	opam config exec -- \
 	rm -f *.o
 	ocamlbuild -use-ocamlfind -pkgs llvm.bitreader qweb.native
-	gcc -c functions.c
-	clang -emit-llvm -o functions.bc -c functions.c -Wno-varargs
+	gcc -c printbig.c
+	clang -emit-llvm -o printbig.bc -c printbig.c -Wno-varargs
 
 # "make clean" removes all generated files
 
@@ -22,12 +22,12 @@ clean :
 	rm -rf testall.log *.diff qweb scanner.ml parser.ml parser.mli
 	rm -rf *.cmx *.cmi *.cmo *.cmx *.ll *.html
 	rm -rf *.err *.out *.exe *.s
-	rm -f *.o functions.bc
+	rm -f *.o printbig.bc
 
 # Testing the "printbig" example
 
-printbig : functions.c
-	cc -o functions -DBUILD_TEST functions.c
+printbig : printbig.c
+	cc -o printbig -DBUILD_TEST printbig.c
 
 # Building the tarball
 
@@ -48,7 +48,7 @@ TESTFILES = $(TESTS:%=test-%.qwb) $(TESTS:%=test-%.out) \
 
 TARFILES = ast.ml sast.ml codegen.ml Makefile _tags qweb.ml qwebparse.mly \
 	README scanner.mll semant.ml testall.sh \
-	functions.c arcade-font.pbm font2c \
+	printbig.c arcade-font.pbm font2c \
 	Dockerfile \
 	$(TESTFILES:%=tests/%)
 

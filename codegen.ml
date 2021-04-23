@@ -69,11 +69,6 @@ let translate (globals, functions) =
   let createHeader_func : L.llvalue =
     L.declare_function "createHeader" createHeader_t the_module in *)
 
-  let string_concat_t : L.lltype =
-    L.function_type string_t [| string_t; string_t |] in
-  let string_concat_f : L.llvalue =
-    L.declare_function "string_concat" string_concat_t the_module in
-
   (* Define each function (arguments and return type) so we can
      call it even before we've created its body *)
   let function_decls : (L.llvalue * sfunc_decl) StringMap.t =
@@ -154,12 +149,6 @@ let translate (globals, functions) =
          | A.And | A.Or ->
            raise (Failure "internal error: semant should have rejected and/or on float")
         ) e1' e2' "tmp" builder
-      | SBinop ((A.String,_ ) as e1, op, e2) ->
-        let e1' = expr builder e1
-        and e2' = expr builder e2 in
-        (match op with
-           A.Add     -> L.build_call string_concat_f [| e1'; e2' |] "string_concat" builder
-         | _ -> raise (Failure ("operation " ^ (A.string_of_op op) ^ " not implemented")))
       | SBinop (e1, op, e2) ->
         let e1' = expr builder e1
         and e2' = expr builder e2 in

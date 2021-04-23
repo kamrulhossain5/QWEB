@@ -3,36 +3,6 @@
  */
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-char *string_concat(char *s1, char *s2) {
-    char *new = (char *) malloc(strlen(s1) + strlen(s2) + 1);
-    strcpy(new, s1);
-    strcat(new, s2);
-    return new;
-}
-
-typedef struct List_element {
-    struct List_element *next;
-    struct List_element *prev;
-    void *data;
-} list_element;
-
-typedef struct List {
-    int32_t length;
-    list_element *head;
-    list_element *tail;
-} list;
-
-//init list
-list* list_init() {
-    list* l = (list *) malloc(sizeof(list));
-    l->length = 0;
-    l->head = NULL;
-    l->tail = NULL;
-    return l;
-}
 
 /*
  * Font information: one byte per row, 8 rows per character
@@ -91,7 +61,7 @@ void printbig(int c)
       putchar(d); putchar(d);
     }
     putchar('\n');
-  } while (index & 0x7);
+  } while (index & 0x7); 
 }
 
 
