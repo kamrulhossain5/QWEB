@@ -1,1 +1,1 @@
-Fatal error: exception Failure("illegal none local b")
+Fatal error: exception Failure("illegal void local b")

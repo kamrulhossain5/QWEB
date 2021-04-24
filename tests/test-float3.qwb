@@ -1,4 +1,4 @@
-function none testfloat(float a, float b){
+function void testfloat(float a, float b){
   printf(a + b);
   printf(a - b);
   printf(a * b);

@@ -1,7 +1,7 @@
 int a;
 bool b;
 
-function none foo(int c, bool d){
+function void foo(int c, bool d){
   int dd;
   bool e;
   a + c;

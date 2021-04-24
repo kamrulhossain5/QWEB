@@ -50,7 +50,7 @@ rule token = parse
 | "int"    { INT }
 | "bool"   { BOOL }
 | "float"  { FLOAT }
-| "none"   { NONE }
+| "void"   { VOID }
 | "str"    { STRING }
 | "list"   { LIST }
 | "true"   { BLIT(true)  }

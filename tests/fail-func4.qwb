@@ -1,13 +1,13 @@
 function int foo(){
   }
 
-function none bar(){
+function void bar(){
   }
 
 function int print(){ #Should not be able to define print
   }
 
-function none baz(){
+function void baz(){
   }
 
 function int main(){

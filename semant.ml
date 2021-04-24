@@ -15,7 +15,7 @@ let check (globals, functions) =
   (* Verify a list of bindings has no none types or duplicate names *)
   let check_binds (kind : string) (binds : bind list) =
     List.iter (function
-	(None, b) -> raise (Failure ("illegal none " ^ kind ^ " " ^ b))
+	(Void, b) -> raise (Failure ("illegal void " ^ kind ^ " " ^ b))
       | _ -> ()) binds;
     let rec dups = function
         [] -> ()
@@ -34,7 +34,7 @@ let check (globals, functions) =
   (* Collect function declarations for built-in functions: no bodies *)
   let built_in_decls =
     let add_bind map (name, ty) = StringMap.add name {
-      typ = None;
+      typ = Void;
       fname = name;
       formals = [(ty, "x")];
       locals = []; body = [] } map
@@ -45,8 +45,7 @@ let check (globals, functions) =
                                ("createHeader", String);
                                ("createSubheader", String);
                                ("createParagraph", String);
-                               ("createList", String);
-			                         ("printbig", Int) ]
+                               ("createList", String) ]
   in
 
   (* Add function name to symbol table *)
@@ -100,7 +99,7 @@ let check (globals, functions) =
         Literal  l -> (Int, SLiteral l)
       | Fliteral l -> (Float, SFliteral l)
       | BoolLit l  -> (Bool, SBoolLit l)
-      | Noexpr     -> (None, SNoexpr)
+      | Noexpr     -> (Void, SNoexpr)
       | StringLit s -> (String, SStringLit s)
       | Id s       -> (type_of_identifier s, SId s)
       | Assign(var, e) as ex ->
@@ -125,8 +124,8 @@ let check (globals, functions) =
           let same = t1 = t2 in
           (* Determine expression type based on operator and operand types *)
           let ty = match op with
-              Add | Sub | Mult | Div | Mod when same && t1 = Int   -> Int
-            | Add | Sub | Mult | Div | Mod when same && t1 = Float -> Float
+              Add | Sub | Mult | Div when same && t1 = Int   -> Int
+            | Add | Sub | Mult | Div when same && t1 = Float -> Float
             | Add                          when same && t1 = String -> String
           | Equal | Neq            when same               -> Bool
           | Less | Leq | Greater | Geq

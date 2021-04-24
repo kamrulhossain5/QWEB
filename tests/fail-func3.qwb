@@ -1,7 +1,7 @@
 function int foo(int a, bool b, int c){
   }
 
-function none bar(int a, none b, int c){ #Error: illegal none formal b
+function void bar(int a, void b, int c){ #Error: illegal void formal b
   }
 
 function int main(){

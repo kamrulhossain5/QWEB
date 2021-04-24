@@ -32,7 +32,7 @@ let translate (globals, functions) =
   and i1_t       = L.i1_type     context
   and float_t    = L.double_type context
   and string_t   = L.pointer_type (L.i8_type context)
-  and none_t     = L.void_type   context
+  and void_t     = L.void_type   context
     in
 
   (* Return the LLVM type for a QWEB type *)
@@ -40,7 +40,7 @@ let translate (globals, functions) =
       A.Int   -> i32_t
     | A.Bool  -> i1_t
     | A.Float -> float_t
-    | A.None  -> none_t
+    | A.Void  -> void_t
     | A.String -> string_t
     | A.List(t) -> L.pointer_type (ltype_of_typ t)
   in
@@ -59,10 +59,10 @@ let translate (globals, functions) =
   let printf_func : L.llvalue =
     L.declare_function "printf" printf_t the_module in
 
-  let printbig_t : L.lltype =
+  (* let printbig_t : L.lltype =
     L.function_type i32_t [| i32_t |] in
   let printbig_func : L.llvalue =
-    L.declare_function "printbig" printbig_t the_module in
+    L.declare_function "printbig" printbig_t the_module in *)
 
   (* let createHeader_t : L.lltype =
     L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
@@ -139,7 +139,6 @@ let translate (globals, functions) =
          | A.Sub     -> L.build_fsub
          | A.Mult    -> L.build_fmul
          | A.Div     -> L.build_fdiv
-         | A.Mod     -> L.build_frem
          | A.Equal   -> L.build_fcmp L.Fcmp.Oeq
          | A.Neq     -> L.build_fcmp L.Fcmp.One
          | A.Less    -> L.build_fcmp L.Fcmp.Olt
@@ -157,7 +156,6 @@ let translate (globals, functions) =
          | A.Sub     -> L.build_sub
          | A.Mult    -> L.build_mul
          | A.Div     -> L.build_sdiv
-         | A.Mod     -> L.build_srem
          | A.And     -> L.build_and
          | A.Or      -> L.build_or
          | A.Equal   -> L.build_icmp L.Icmp.Eq
@@ -175,8 +173,8 @@ let translate (globals, functions) =
          | A.Not                  -> L.build_not) e' "tmp" builder
       | SCall ("print", [e]) | SCall ("printb", [e]) ->
         L.build_call printf_func [| int_format_str ; (expr builder e) |] "printf" builder
-      | SCall ("printbig", [e]) ->
-        L.build_call printbig_func [| (expr builder e) |] "printbig" builder
+      (* | SCall ("printbig", [e]) ->
+        L.build_call printbig_func [| (expr builder e) |] "printbig" builder *)
       | SCall ("prints", [e]) ->
         L.build_call printf_func [| string_format_str ; (expr builder e) |] "printf" builder
       | SCall ("createHeader", [e]) ->
@@ -193,7 +191,7 @@ let translate (globals, functions) =
         let (fdef, fdecl) = StringMap.find f function_decls in
         let llargs = List.rev (List.map (expr builder) (List.rev args)) in
         let result = (match fdecl.styp with
-              A.None -> ""
+              A.Void -> ""
             | _ -> f ^ "_result") in
         L.build_call fdef (Array.of_list llargs) result builder
     in
@@ -216,7 +214,7 @@ let translate (globals, functions) =
       | SExpr e -> ignore(expr builder e); builder
       | SOutput e -> ignore(match fdecl.styp with
           (* Special "return nothing" instr *)
-            A.None -> L.build_ret_void builder
+            A.Void -> L.build_ret_void builder
           (* Build return statement *)
           | _ -> L.build_ret (expr builder e) builder );
         builder
@@ -261,7 +259,7 @@ let translate (globals, functions) =
 
     (* Add a return if the last block falls off the end *)
     add_terminal builder (match fdecl.styp with
-          A.None -> L.build_ret_void
+          A.Void -> L.build_ret_void
         | A.Float -> L.build_ret (L.const_float float_t 0.0)
         | t -> L.build_ret (L.const_int (ltype_of_typ t) 0))
   in

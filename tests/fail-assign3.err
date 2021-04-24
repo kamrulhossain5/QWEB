@@ -1,1 +1,1 @@
-Fatal error: exception Failure("illegal assignment int = none in i = noneFunc()")
+Fatal error: exception Failure("illegal assignment int = void in i = voidFunc()")

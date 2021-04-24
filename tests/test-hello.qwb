@@ -1,4 +1,4 @@
-function none main(){
+function void main(){
   createHeader("Hello Kam!");
   createSubheader("Hello Kam!");
   createParagraph("Hello Kam!");

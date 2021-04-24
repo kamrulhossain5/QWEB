@@ -1,15 +1,15 @@
 int a;
 int b;
 
-function none printa(){
+function void printa(){
   print(a);
 }
 
-function none printbb(){
+function void printbb(){
   print(b);
 }
 
-function none incab(){
+function void incab(){
   a = a + 1;
   b = b + 1;
 }

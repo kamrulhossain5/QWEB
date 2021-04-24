@@ -3,7 +3,7 @@ function int foo(){
 
 function int bar(){
   int a;
-  none b; #Error: illegal none local b
+  void b; #Error: illegal void local b
   bool c;
 
   output 0;

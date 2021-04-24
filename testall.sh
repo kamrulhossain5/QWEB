@@ -10,11 +10,12 @@
 LLI="/usr/local/opt/llvm/bin/lli"
 
 # Path to the LLVM compiler
-LLC="llc"
+# LLC="llc"
 LLC="/usr/local/opt/llvm/bin/llc"
 
 # Path to the C compiler
 CC="cc"
+# CC="/usr/local/opt/llvm/bin/cc"
 
 # Path to the QWEB compiler.  Usually "./qweb.native"
 # Try "_build/qweb.native" if ocamlbuild was unable to create a symbolic link.
@@ -95,7 +96,7 @@ Check() {
     generatedfiles="$generatedfiles ${basename}.ll ${basename}.s ${basename}.exe ${basename}.out ${basename}.html" &&
     Run "$QWEB" "$1" ">" "${basename}.ll" &&
     Run "$LLC" "-relocation-model=pic" "${basename}.ll" ">" "${basename}.s" &&
-    Run "$CC" "-o" "${basename}.exe" "${basename}.s" "printbig.o" &&
+    Run "$CC" "-o" "${basename}.exe" "${basename}.s" &&
     Run "./${basename}.exe" > "${basename}.out" &&
     Run "./${basename}.exe" > "${basename}.html" &&
     Compare ${basename}.out ${reffile}.out ${basename}.diff
@@ -167,12 +168,12 @@ LLIFail() {
 
 which "$LLI" >> $globallog || LLIFail
 
-if [ ! -f printbig.o ]
-then
-    echo "Could not find printbig.o"
-    echo "Try \"make printbig.o\""
-    exit 1
-fi
+# if [ ! -f printbig.o ]
+# then
+#     echo "Could not find printbig.o"
+#     echo "Try \"make printbig.o\""
+#     exit 1
+# fi
 
 if [ $# -ge 1 ]
 then

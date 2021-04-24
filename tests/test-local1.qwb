@@ -1,4 +1,4 @@
-function none foo(bool i){
+function void foo(bool i){
   int i; #Should hide the formal i
 
   i = 9;

@@ -1,4 +1,4 @@
-function none printem(int a, int b, int c, int d){
+function void printem(int a, int b, int c, int d){
   print(a);
   print(b);
   print(c);

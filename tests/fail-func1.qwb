@@ -7,7 +7,7 @@ function int bar(){
 function int baz(){
   }
 
-function none bar(){ #Error: duplicate function bar
+function void bar(){ #Error: duplicate function bar
   }
 
 function int main(){

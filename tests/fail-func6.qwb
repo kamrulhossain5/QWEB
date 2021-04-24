@@ -1,4 +1,4 @@
-function none foo(int a, bool b){
+function void foo(int a, bool b){
   }
 
 function int main(){

@@ -1,5 +1,5 @@
-function none foo(){
-  if (true){ #Should output none
+function void foo(){
+  if (true){ #Should output void
     output 42;
   }
   otherwise{

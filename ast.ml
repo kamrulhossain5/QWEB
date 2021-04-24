@@ -1,11 +1,11 @@
 (* Abstract Syntax Tree *)
 
-type op = Add | Sub | Mult | Div | Mod | Equal | Neq | Less | Leq | Greater | Geq |
+type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq |
           And | Or
 
 type uop = Neg | Not
 
-type typ = Int | Bool | Float | None | String | List of typ
+type typ = Int | Bool | Float | Void | String | List of typ
 
 type bind = typ * string
 
@@ -99,7 +99,7 @@ let rec string_of_typ = function
     Int -> "int"
   | Bool -> "bool"
   | Float -> "float"
-  | None -> "none"
+  | Void -> "void"
   | String -> "str"
   | List(t) -> "List(" ^ string_of_typ t ^ ")"
 

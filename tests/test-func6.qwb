@@ -1,4 +1,4 @@
-function none foo(){
+function void foo(){
   }
 
 function int bar(int a, bool b, int c){

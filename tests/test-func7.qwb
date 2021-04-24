@@ -1,6 +1,6 @@
 int a;
 
-function none foo(int c){
+function void foo(int c){
   a = c + 35;
 }
 
