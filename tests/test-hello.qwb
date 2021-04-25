@@ -1,6 +1,7 @@
-function void main(){
-  createHeader("Hello Kam!");
-  createSubheader("Hello Kam!");
-  createParagraph("Hello Kam!");
-  createList("Hello Kam!");
+function int main(){
+  createHeader("Hello World!");
+  createSubheader("Hello World!");
+  createParagraph("Hello World!");
+  createList("Hello World!");
+  output 0;
 }

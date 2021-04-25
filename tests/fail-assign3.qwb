@@ -1,7 +1,5 @@
-function void voidFunc(){
-  }
-
 function int main(){
-  int i;
-  i = voidFunc(); #Fail: assigning a void to an integer
+  str i;
+  bool b;
+  b = "test string"; #Fail: assigning a string to a bool
 }

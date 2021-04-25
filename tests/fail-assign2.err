@@ -1,1 +1,1 @@
-diff: fail-*.err: No such file or directory
+Fatal error: exception Failure("illegal assignment int = void in i = voidFunc()")

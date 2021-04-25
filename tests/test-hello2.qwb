@@ -2,9 +2,9 @@ function str helloworld(str a){
   output a;
 }
 
-function str main(){
+function int main(){
   str b;
   b = helloworld("hello");
-  prints(b);
-  output b;
+  createHeader(b);
+  output 0;
 }
