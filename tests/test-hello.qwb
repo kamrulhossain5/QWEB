@@ -3,5 +3,6 @@ function int main(){
   createSubheader("Hello World!");
   createParagraph("Hello World!");
   createList("Hello World!");
+  createImage("https://source.unsplash.com/user/c_v_r");
   output 0;
 }

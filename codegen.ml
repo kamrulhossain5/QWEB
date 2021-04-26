@@ -90,6 +90,7 @@ let translate (globals, functions) =
     and header_format_str = L.build_global_stringptr "<h1>%s</h1><br>\n" "fmt" builder
     and subheader_format_str = L.build_global_stringptr "<h2>%s</h2><br>\n" "fmt" builder
     and paragraph_format_str = L.build_global_stringptr "<p>%s</p><br>\n" "fmt" builder
+    and image_format_str = L.build_global_stringptr "<img src='%s'><br>\n" "fmt" builder
     and list_format_str = L.build_global_stringptr "<li>%s</li><br>\n" "fmt" builder
     and float_format_str = L.build_global_stringptr "%g<br>\n" "fmt" builder in
 
@@ -183,6 +184,8 @@ let translate (globals, functions) =
         L.build_call printf_func [| subheader_format_str ; (expr builder e) |] "printf" builder
       | SCall ("createParagraph", [e]) ->
         L.build_call printf_func [| paragraph_format_str ; (expr builder e) |] "printf" builder
+      | SCall ("createImage", [e]) ->
+        L.build_call printf_func [| image_format_str ; (expr builder e) |] "printf" builder
       | SCall ("createList", [e]) ->
         L.build_call printf_func [| list_format_str ; (expr builder e) |] "printf" builder
       | SCall ("printf", [e]) ->

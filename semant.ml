@@ -45,6 +45,7 @@ let check (globals, functions) =
                                ("createHeader", String);
                                ("createSubheader", String);
                                ("createParagraph", String);
+                               ("createImage", String);
                                ("createList", String) ]
   in
 
