@@ -85,13 +85,13 @@ let translate (globals, functions) =
     let (the_function, _) = StringMap.find fdecl.sfname function_decls in
     let builder = L.builder_at_end context (L.entry_block the_function) in
 
-    let int_format_str = L.build_global_stringptr "%d\n" "fmt" builder
-    and string_format_str = L.build_global_stringptr "<span>%s</span>\n" "fmt" builder
-    and header_format_str = L.build_global_stringptr "<h1>%s</h1>\n" "fmt" builder
-    and subheader_format_str = L.build_global_stringptr "<h2>%s</h2>\n" "fmt" builder
-    and paragraph_format_str = L.build_global_stringptr "<p>%s</p>\n" "fmt" builder
-    and list_format_str = L.build_global_stringptr "<li>%s</li>\n" "fmt" builder
-    and float_format_str = L.build_global_stringptr "%g\n" "fmt" builder in
+    let int_format_str = L.build_global_stringptr "%d<br>\n" "fmt" builder
+    and string_format_str = L.build_global_stringptr "<span>%s</span><br>\n" "fmt" builder
+    and header_format_str = L.build_global_stringptr "<h1>%s</h1><br>\n" "fmt" builder
+    and subheader_format_str = L.build_global_stringptr "<h2>%s</h2><br>\n" "fmt" builder
+    and paragraph_format_str = L.build_global_stringptr "<p>%s</p><br>\n" "fmt" builder
+    and list_format_str = L.build_global_stringptr "<li>%s</li><br>\n" "fmt" builder
+    and float_format_str = L.build_global_stringptr "%g<br>\n" "fmt" builder in
 
     (* Construct the function's "locals": formal arguments and locally
        declared variables.  Allocate each on the stack, initialize their
