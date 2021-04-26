@@ -1,0 +1,21 @@
+function int gcd(int a, int b){
+  REPEAT until (a != b){
+    if (a > b) a = a - b;
+    otherwise b = b - a;
+  }
+  output a;
+}
+
+function int main(){
+  createHeader("Demo Program");
+  createSubheader("Greatest Common Divisor");
+  createParagraph("The gcd function returns the greatest common divisor of two or more integers. The greatest common divisor is the largest integer that goes into all supplied numbers without a remainder. For example, gcd(60,36) returns 12.");
+  createImage("./demo.png");
+  createList("gcd(2,14)");
+  print(gcd(2,14));
+  createList("gcd(3,15)");
+  print(gcd(3,15));
+  createList("gcd(99,121)");
+  print(gcd(99,121));
+  output 0;
+}

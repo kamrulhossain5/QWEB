@@ -87,11 +87,11 @@ let translate (globals, functions) =
 
     let int_format_str = L.build_global_stringptr "%d<br>\n" "fmt" builder
     and string_format_str = L.build_global_stringptr "<span>%s</span><br>\n" "fmt" builder
-    and header_format_str = L.build_global_stringptr "<h1>%s</h1><br>\n" "fmt" builder
-    and subheader_format_str = L.build_global_stringptr "<h2>%s</h2><br>\n" "fmt" builder
-    and paragraph_format_str = L.build_global_stringptr "<p>%s</p><br>\n" "fmt" builder
-    and image_format_str = L.build_global_stringptr "<img src='%s'><br>\n" "fmt" builder
-    and list_format_str = L.build_global_stringptr "<li>%s</li><br>\n" "fmt" builder
+    and header_format_str = L.build_global_stringptr "<h1>%s</h1>\n" "fmt" builder
+    and subheader_format_str = L.build_global_stringptr "<h2>%s</h2>\n" "fmt" builder
+    and paragraph_format_str = L.build_global_stringptr "<p>%s</p>\n" "fmt" builder
+    and image_format_str = L.build_global_stringptr "<img src='%s'>\n" "fmt" builder
+    and list_format_str = L.build_global_stringptr "<li>%s</li>\n" "fmt" builder
     and float_format_str = L.build_global_stringptr "%g<br>\n" "fmt" builder in
 
     (* Construct the function's "locals": formal arguments and locally

@@ -1,0 +1,19 @@
+function int main(){
+  createHeader("Stephen A. Edwards");
+  createImage("./edwards.jpeg");
+  createSubheader("Contact Information");
+  prints("sedwards@cs.columbia.edu");
+  prints("+1 212 939 7019");
+  prints("+1 212 666 0140 (fax)");
+  prints("462 Computer Science Building");
+  prints("1214 Amsterdam Ave MC 0401 New York, NY 10027-7003");
+  createSubheader("About");
+  createParagraph("Stephen A. Edwards is a tenured associate professor in the Computer Science Department of Columbia University. He obtained his Ph.D from the University of California, Berkeley in 1997, his MS from Berkeley in 1994, and his BS from the California Institute of Technology in 1992, all in Electrical Engineering. Before pursuing his academic career in 2001, he worked for two Electronic Design Automation (EDA) companies, Simplex Solutions, now part of Cadence, and Synopsys.");
+  createParagraph("Professor Edwards and his group explore automating the creation of software for embedded systems: application-specific computers hiding in a growing number of industrial and consumer systems. They have developed numerous compilation techniques for the Esterel synchronous language for real-time control and are also developing domain-specific languages for device drivers and communication protocols.");
+  createSubheader("Courses Taught");
+  createList("Programming Languages and Translators");
+  createList("Parallel Functional Programming");
+  createList("Fundamentals of Computer Systems");
+  createList("Embedded System Design");
+  output 0;
+}

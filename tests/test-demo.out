@@ -1,0 +1,10 @@
+<h1>Demo Program</h1>
+<h2>Greatest Common Divisor</h2>
+<p>The gcd function returns the greatest common divisor of two or more integers. The greatest common divisor is the largest integer that goes into all supplied numbers without a remainder. For example, gcd(60,36) returns 12.</p>
+<img src='./demo.png'>
+<li>gcd(2,14)</li>
+2<br>
+<li>gcd(3,15)</li>
+3<br>
+<li>gcd(99,121)</li>
+11<br>
